@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Friend Tracker App</string>
+    <string name="contact">Contacts</string>
+    <string name="meeting">Meetings</string>
+    <string name="addContact">Add a Contact</string>
+    <string name="addMeeting">Add a Meeting</string>
+    <string name="contactList">Display Contact List</string>
+    <string name="meetingList">Display Meeting List</string>
+    <string name="friendList">Friend List</string>
+</resources>
