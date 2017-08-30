@@ -1,4 +1,4 @@
-package com.example.amanda.friendtrackerappass1;
+package com.example.amanda.friendtrackerappass1.View;
 
 import android.content.Context;
 import android.content.Intent;

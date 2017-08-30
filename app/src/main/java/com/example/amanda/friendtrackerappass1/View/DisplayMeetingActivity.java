@@ -1,7 +1,9 @@
-package com.example.amanda.friendtrackerappass1;
+package com.example.amanda.friendtrackerappass1.View;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.amanda.friendtrackerappass1.R;
 
 public class DisplayMeetingActivity extends AppCompatActivity {
 

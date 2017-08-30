@@ -1,18 +1,19 @@
-package com.example.amanda.friendtrackerappass1;
+package com.example.amanda.friendtrackerappass1.View;
 
-import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.amanda.friendtrackerappass1.Model.Friend;
+import com.example.amanda.friendtrackerappass1.Model.FriendManager;
+import com.example.amanda.friendtrackerappass1.R;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;

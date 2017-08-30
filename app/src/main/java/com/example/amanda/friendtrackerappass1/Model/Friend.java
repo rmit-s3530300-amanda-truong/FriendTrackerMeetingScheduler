@@ -1,4 +1,4 @@
-package com.example.amanda.friendtrackerappass1;
+package com.example.amanda.friendtrackerappass1.Model;
 
 import java.util.Date;
 
@@ -41,8 +41,18 @@ public class Friend {
         return birthday;
     }
 
-    public void editBirthday(Date birthday)
+    public void editBirthday(Date newBirthday)
     {
-        this.birthday = birthday;
+        birthday = newBirthday;
+    }
+
+    public void editName(String newName)
+    {
+        name = newName;
+    }
+
+    public void editEmail(String newEmail)
+    {
+        name = newEmail;
     }
 }

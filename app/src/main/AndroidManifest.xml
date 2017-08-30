@@ -11,18 +11,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".View.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DisplayContactActivity" />
-        <activity android:name=".AddMeetingActivity" />
-        <activity android:name=".DisplayMeetingActivity" />
+        <activity android:name=".View.DisplayContactActivity" />
+        <activity android:name=".View.AddMeetingActivity" />
+        <activity android:name=".View.DisplayMeetingActivity" />
         <activity android:name=".asdf" />
-        <activity android:name=".ContactDataManager" />
+        <activity android:name=".View.ContactDataManager" />
     </application>
 
 </manifest>

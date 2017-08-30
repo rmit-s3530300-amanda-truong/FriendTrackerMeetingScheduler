@@ -1,6 +1,8 @@
-package com.example.amanda.friendtrackerappass1;
+package com.example.amanda.friendtrackerappass1.Model;
 
 import android.util.Log;
+
+import com.example.amanda.friendtrackerappass1.Model.Friend;
 
 import java.util.ArrayList;
 
