@@ -1,25 +1,31 @@
 package com.example.amanda.friendtrackerappass1.View;
 
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.amanda.friendtrackerappass1.Controller.MainMenuController;
+import com.example.amanda.friendtrackerappass1.Model.Friend;
+import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.R;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.Serializable;
+
+public class MainActivity extends AppCompatActivity{
 
     private String LOG_TAG = this.getClass().getName();
-    protected static final int PICK_CONTACTS = 100;
+    private MainMenuController controller;
+    private FriendManager friendManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        controller = new MainMenuController(this);
 
         Log.i(LOG_TAG, "onCreate()");
 
@@ -33,33 +39,28 @@ public class MainActivity extends AppCompatActivity {
         tvContact.setText(R.string.contact);
         tvMeeting.setText(R.string.meeting);
 
-        bAddContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addContact();
-            }
-        });
+        bAddContact.setOnClickListener(controller);
 
-        bDisContact.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                displayContact();
-            }
-        });
+        bDisContact.setOnClickListener(controller);
 
-        bAddMeeting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addMeeting();
-            }
-        });
+        bAddMeeting.setOnClickListener(controller);
 
-        bDisMeeting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                displayMeeting();
+        bDisMeeting.setOnClickListener(controller);
+
+        Bundle buttonInfo = getIntent().getExtras();
+        if(buttonInfo != null)
+        {
+            String buttonStr = buttonInfo.getString(getResources().getString(R.string.addContact));
+            if(buttonStr.equals(getResources().getString(R.string.add_button)))
+            {
+                controller.addContact();
             }
-        });
+            friendManager = (FriendManager) buttonInfo.getSerializable(getResources().getString(R.string.friendManager));
+        }
+        else
+        {
+            friendManager = new FriendManager();
+        }
     }
 
     @Override
@@ -98,42 +99,11 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void addContact() {
-        Log.i(LOG_TAG, "addContactActivity()");
-
-        Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-        startActivityForResult(contactPickerIntent, PICK_CONTACTS);
-    }
-
-    public void displayContact()
-    {
-        Log.i(LOG_TAG, "displayContactActivity()");
-
-        Intent intent = new Intent(this, DisplayContactActivity.class);
-        startActivity(intent);
-    }
-
-    public void addMeeting()
-    {
-        Log.i(LOG_TAG, "addMeetingActivity()");
-
-        Intent intent = new Intent(this, AddMeetingActivity.class);
-        startActivity(intent);
-    }
-
-    public void displayMeeting()
-    {
-        Log.i(LOG_TAG, "displayMeetingActivity()");
-
-        Intent intent = new Intent(this, DisplayMeetingActivity.class);
-        startActivity(intent);
-    }
-
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         String name = "";
         String email = "";
-        if (requestCode == PICK_CONTACTS)
+        if (requestCode == this.getResources().getInteger(R.integer.PICK_CONTACTS))
         {
             if (resultCode == RESULT_OK)
             {
@@ -152,9 +122,11 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Intent intent = new Intent(this, DisplayContactActivity.class);
-        intent.putExtra("name",name);
-        intent.putExtra("email",email);
+        Intent intent = new Intent(MainActivity.this, DisplayContactActivity.class);
+        intent.putExtra(getResources().getString(R.string.name),name);
+        intent.putExtra(getResources().getString(R.string.email),email);
+        intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+        intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.main));
         startActivity(intent);
    }
 }

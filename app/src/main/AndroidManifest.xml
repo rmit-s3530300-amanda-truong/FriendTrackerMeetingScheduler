@@ -21,8 +21,8 @@
         <activity android:name=".View.DisplayContactActivity" />
         <activity android:name=".View.AddMeetingActivity" />
         <activity android:name=".View.DisplayMeetingActivity" />
-        <activity android:name=".asdf" />
         <activity android:name=".View.ContactDataManager" />
+        <activity android:name=".View.EditContactActivity"></activity>
     </application>
 
 </manifest>

@@ -1,12 +1,17 @@
 package com.example.amanda.friendtrackerappass1.Model;
 
+import android.util.Log;
+
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  * Created by Amanda on 10/08/2017.
  */
 
-public class Friend {
+public class Friend implements Serializable{
     private String id;
     private String name;
     private String email;
@@ -41,9 +46,23 @@ public class Friend {
         return birthday;
     }
 
-    public void editBirthday(Date newBirthday)
+    public void editBirthday(int date, int month, int year)
     {
-        birthday = newBirthday;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        String dateStr = String.valueOf(date);
+        String monthStr = String.valueOf(month);
+        String yearStr = String.valueOf(year);
+        String dateAppend = dateStr + "-" + monthStr + "-" + yearStr;
+
+        try
+        {
+            birthday = dateFormat.parse(dateAppend);
+            Log.i(LOG_TAG, "birthday in friend" + birthday);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void editName(String newName)
@@ -53,6 +72,6 @@ public class Friend {
 
     public void editEmail(String newEmail)
     {
-        name = newEmail;
+        email = newEmail;
     }
 }

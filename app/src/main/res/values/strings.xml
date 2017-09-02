@@ -7,4 +7,18 @@
     <string name="contactList">Display Contact List</string>
     <string name="meetingList">Display Meeting List</string>
     <string name="friendList">Friend List</string>
+    <string name="name">name</string>
+    <string name="email">email</string>
+    <string name="controller">MainMenuController</string>
+    <string name="add_button">add button</string>
+    <string name="friendManager">Friend Manager</string>
+    <string name="editContactTitle">Edit Contact Details</string>
+    <string name="birthday">Click to enter birthday</string>
+    <string name="save">Save</string>
+    <string name="back">Back</string>
+    <string name="id">id</string>
+    <string name="className">className</string>
+    <string name="main">main</string>
+    <string name="edit">edit</string>
+    <string name="options">Options</string>
 </resources>

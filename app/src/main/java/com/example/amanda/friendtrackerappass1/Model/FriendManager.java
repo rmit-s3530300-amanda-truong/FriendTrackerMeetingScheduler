@@ -4,13 +4,14 @@ import android.util.Log;
 
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Amanda on 10/08/2017.
  */
 
-public class FriendManager {
+public class FriendManager implements Serializable{
 
     private ArrayList<Friend> friendList;
     private ArrayList<String> friendNameList;
@@ -42,6 +43,18 @@ public class FriendManager {
         {
             Log.i(LOG_TAG, "Error: Friend list doesnt contain " + friend);
         }
+    }
+
+    public Friend getFriend(String id)
+    {
+        for(Friend friend: friendList)
+        {
+            if(friend.getID().equals(id))
+            {
+                return friend;
+            }
+        }
+        return null;
     }
 
     public ArrayList<Friend> getFriendList()

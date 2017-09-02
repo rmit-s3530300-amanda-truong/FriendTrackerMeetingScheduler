@@ -1,32 +1,33 @@
 package com.example.amanda.friendtrackerappass1.View;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.amanda.friendtrackerappass1.Model.Friend;
+import com.example.amanda.friendtrackerappass1.Controller.FriendListController;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.R;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
 
 public class DisplayContactActivity extends AppCompatActivity {
 
     private String LOG_TAG = this.getClass().getName();
-    private ArrayList<Friend> friendList;
-    private ArrayList<String> friendNameList;
+
     private String name;
     private String email;
-    private Date birthday;
+    private String id;
+    private String callingClass;
+    private FriendListAdapter adapter;
+    private FriendListController friendListController;
     private FriendManager friendManager;
+    String[] menuItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,20 +38,48 @@ public class DisplayContactActivity extends AppCompatActivity {
 
         TextView tvFriendList = (TextView) findViewById(R.id.tvFriendList);
         tvFriendList.setText(R.string.friendList);
-        friendManager = new FriendManager();
-        friendList = friendManager.getFriendList();
-        friendNameList = friendManager.getFriendNameList();
 
-        //https://stackoverflow.com/questions/2091465/how-do-i-pass-data-between-activities-in-android-application
         Bundle contactInfo = getIntent().getExtras();
         if(contactInfo!=null)
         {
-            name = contactInfo.getString("name");
-            email = contactInfo.getString("email");
+            name = contactInfo.getString(getResources().getString(R.string.name));
+            email = contactInfo.getString(getResources().getString(R.string.email));
+            friendManager = (FriendManager) contactInfo.getSerializable(getResources().getString(R.string.friendManager));
+            callingClass = contactInfo.getString(getResources().getString(R.string.className));
+            Log.i(LOG_TAG, "CALLING CLASS" + callingClass);
         }
-        addContact(name, email);
+//        if(callingClass.equals("displayContact"))
+//        {
+//            if(friendManager == null)
+//            {
+//                friendManager = new FriendManager();
+//                friendListController = new FriendListController(this, friendManager);
+//            }
+//        }
+//        else
+//        {
+//            friendListController = new FriendListController(this, friendManager);
+//            if(callingClass.equals(getResources().getString(R.string.main)))
+//            {
+//                friendListController.addContact(name, email);
+//                id = friendListController.getID();
+//            }
+//
+//            adapter = friendListController.getAdapter();
+//
+//            ListView lvFriendList = (ListView) findViewById(R.id.lvFriendList);
+//            lvFriendList.setAdapter(adapter);
+//            registerForContextMenu(lvFriendList);
+//        }
+        friendListController = new FriendListController(this, friendManager);
+        friendListController = new FriendListController(this, friendManager);
+        if(callingClass.equals(getResources().getString(R.string.main)))
+        {
+            friendListController.addContact(name, email);
+            id = friendListController.getID();
+        }
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.activity_list_view, friendNameList);
+        adapter = friendListController.getAdapter();
 
         ListView lvFriendList = (ListView) findViewById(R.id.lvFriendList);
         lvFriendList.setAdapter(adapter);
@@ -62,7 +91,58 @@ public class DisplayContactActivity extends AppCompatActivity {
         if(v.getId() == R.id.lvFriendList)
         {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            menu.setHeaderTitle(getResources().getString(R.string.options));
+            menuItems = getResources().getStringArray(R.array.menu);
+            for(int i=0; i < menuItems.length; i++)
+            {
+                menu.add(Menu.NONE, i, i, menuItems[i]);
+            }
         }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int menuItemIndex = item.getItemId();
+        String menuItemName = menuItems[menuItemIndex];
+        int listPos = info.position;
+        if(menuItemName.equals(menuItems[0]))
+        {
+            Intent intent = new Intent(this, EditContactActivity.class);
+            intent.putExtra(getResources().getString(R.string.name), adapter.getItem(listPos).getName());
+            intent.putExtra(getResources().getString(R.string.email), adapter.getItem(listPos).getEmail());
+            intent.putExtra(getResources().getString(R.string.id), adapter.getItem(listPos).getID());
+            intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+            startActivity(intent);
+        }
+        else if(menuItemName.equals(menuItems[1]))
+        {
+            friendManager.removeFriend(adapter.getItem(listPos));
+            adapter.notifyDataSetChanged();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == R.id.action_addContact)
+        {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(getResources().getString(R.string.addContact),"add button");
+            intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+            startActivity(intent);
+        }
+        return true;
     }
 
     @Override
@@ -106,21 +186,4 @@ public class DisplayContactActivity extends AppCompatActivity {
         Log.i(LOG_TAG, "onDestroy()");
         super.onDestroy();
     }
-
-    public String generateID()
-    {
-        String uuid = UUID.randomUUID().toString();
-        //uuid.replaceAll("-","");
-        return uuid;
-    }
-
-    public void addContact(String name, String email)
-    {
-        String id = generateID();
-        birthday = null;
-        friendNameList.add(name);
-        Friend friend = new Friend(id, name, email, birthday);
-        friendList.add(friend);
-    }
-
 }
