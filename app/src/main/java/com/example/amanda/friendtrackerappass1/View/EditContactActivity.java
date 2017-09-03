@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
+import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
 
 import java.util.Date;
@@ -32,6 +33,7 @@ public class EditContactActivity extends AppCompatActivity {
     private DatePicker datePicker;
     private Friend friend;
     private String LOG_TAG = this.getClass().getName();
+    private MeetingManager meetingManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,7 @@ public class EditContactActivity extends AppCompatActivity {
             email = contactInfo.getString(getResources().getString(R.string.email));
             id = contactInfo.getString(getResources().getString(R.string.id));
             friendManager = (FriendManager) contactInfo.getSerializable(getResources().getString(R.string.friendManager));
+            meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
         }
 
         friend = friendManager.getFriend(id);
@@ -57,51 +60,51 @@ public class EditContactActivity extends AppCompatActivity {
         {
             String[] birthdayArray = birthday.toString().split(" ");
             int newMonth = 0;
-            if(birthdayArray[1].equals("Jan"))
+            if(birthdayArray[1].equals(getResources().getString(R.string.jan)))
             {
                 newMonth = 1;
             }
-            else if(birthdayArray[1].equals("Feb"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.feb)))
             {
                 newMonth = 2;
             }
-            else if(birthdayArray[1].equals("Mar"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.mar)))
             {
                 newMonth = 3;
             }
-            else if(birthdayArray[1].equals("Apr"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.apr)))
             {
                 newMonth = 4;
             }
-            else if(birthdayArray[1].equals("May"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.may)))
             {
                 newMonth = 5;
             }
-            else if(birthdayArray[1].equals("Jun"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.jun)))
             {
                 newMonth = 6;
             }
-            else if(birthdayArray[1].equals("Jul"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.jul)))
             {
                 newMonth = 7;
             }
-            else if(birthdayArray[1].equals("Aug"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.aug)))
             {
                 newMonth = 8;
             }
-            else if(birthdayArray[1].equals("Sep"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.sep)))
             {
                 newMonth = 9;
             }
-            else if(birthdayArray[1].equals("Oct"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.oct)))
             {
                 newMonth = 10;
             }
-            else if(birthdayArray[1].equals("Nov"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.nov)))
             {
                 newMonth = 11;
             }
-            else if(birthdayArray[1].equals("Dec"))
+            else if(birthdayArray[1].equals(getResources().getString(R.string.dec)))
             {
                 newMonth = 12;
             }
@@ -125,12 +128,10 @@ public class EditContactActivity extends AppCompatActivity {
             friend.editName(etEditName.getText().toString());
             friend.editEmail(etEditEmail.getText().toString());
             friend.editBirthday(date, month, year);
-            Log.i(LOG_TAG,friend.getName());
-            Log.i(LOG_TAG, friend.getEmail());
             AlertDialog.Builder alert = new AlertDialog.Builder(EditContactActivity.this);
-            alert.setTitle("Saved Information");
-            alert.setMessage("Your contact information has been saved!");
-            alert.setPositiveButton("OK", null);
+            alert.setTitle(getResources().getString(R.string.savedInfo));
+            alert.setMessage(getResources().getString(R.string.savedMessaged));
+            alert.setPositiveButton(getResources().getString(R.string.okay), null);
             alert.show();
             saved = true;
         }
@@ -141,22 +142,21 @@ public class EditContactActivity extends AppCompatActivity {
         public void onClick(View view) {
             if(saved == true)
             {
-                Log.i(LOG_TAG, "back" +  etEditName.getText().toString());
-                Log.i(LOG_TAG, "back" + etEditEmail.getText().toString());
                 Intent intent = new Intent(EditContactActivity.this, DisplayContactActivity.class);
                 intent.putExtra(getResources().getString(R.string.name),etEditName.getText().toString());
                 intent.putExtra(getResources().getString(R.string.email), etEditEmail.getText().toString());
                 intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+                intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
                 intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.edit));
                 startActivity(intent);
             }
             else
             {
                 AlertDialog.Builder alert = new AlertDialog.Builder(EditContactActivity.this);
-                alert.setTitle("Go Back");
-                alert.setMessage("You haven't saved your changes, are you sure you wish to go back?");
-                alert.setPositiveButton("Yes", new ConfirmController());
-                alert.setNegativeButton("No", null);
+                alert.setTitle(getResources().getString(R.string.back));
+                alert.setMessage(getResources().getString(R.string.confirmMessage));
+                alert.setPositiveButton(getResources().getString(R.string.yes), new ConfirmController());
+                alert.setNegativeButton(getResources().getString(R.string.no), null);
                 alert.show();
             }
         }
@@ -168,6 +168,7 @@ public class EditContactActivity extends AppCompatActivity {
                 intent.putExtra(getResources().getString(R.string.name), name);
                 intent.putExtra(getResources().getString(R.string.email), email);
                 intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+                intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
                 intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.edit));
                 startActivity(intent);
             }

@@ -15,6 +15,18 @@
         app:showAsAction="always"
         android:title="@string/addMeeting"/>
     <item
+        android:id="@+id/action_displayMeeting"
+        android:icon="@drawable/ic_business_center_black_24dp"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="@string/meetingList"/>
+    <item
+        android:id="@+id/action_addContact"
+        android:icon="@drawable/ic_person_add_black_24dp"
+        android:orderInCategory="100"
+        app:showAsAction="always"
+        android:title="@string/addContact"/>
+    <item
         android:id="@+id/action_displayContacts"
         android:icon="@drawable/ic_contacts_black_24dp"
         android:orderInCategory="100"

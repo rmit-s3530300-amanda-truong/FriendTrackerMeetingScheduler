@@ -1,4 +1,4 @@
-package com.example.amanda.friendtrackerappass1.View;
+package com.example.amanda.friendtrackerappass1.ViewModel;
 
 import android.content.Context;
 import android.view.LayoutInflater;

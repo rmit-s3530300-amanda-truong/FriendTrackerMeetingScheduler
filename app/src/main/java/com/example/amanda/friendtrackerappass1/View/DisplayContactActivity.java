@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import com.example.amanda.friendtrackerappass1.Controller.FriendListController;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
+import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
+import com.example.amanda.friendtrackerappass1.ViewModel.FriendListAdapter;
 
 public class DisplayContactActivity extends AppCompatActivity {
 
@@ -27,6 +29,7 @@ public class DisplayContactActivity extends AppCompatActivity {
     private FriendListAdapter adapter;
     private FriendListController friendListController;
     private FriendManager friendManager;
+    private MeetingManager meetingManager;
     String[] menuItems;
 
     @Override
@@ -45,33 +48,9 @@ public class DisplayContactActivity extends AppCompatActivity {
             name = contactInfo.getString(getResources().getString(R.string.name));
             email = contactInfo.getString(getResources().getString(R.string.email));
             friendManager = (FriendManager) contactInfo.getSerializable(getResources().getString(R.string.friendManager));
+            meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
             callingClass = contactInfo.getString(getResources().getString(R.string.className));
-            Log.i(LOG_TAG, "CALLING CLASS" + callingClass);
         }
-//        if(callingClass.equals("displayContact"))
-//        {
-//            if(friendManager == null)
-//            {
-//                friendManager = new FriendManager();
-//                friendListController = new FriendListController(this, friendManager);
-//            }
-//        }
-//        else
-//        {
-//            friendListController = new FriendListController(this, friendManager);
-//            if(callingClass.equals(getResources().getString(R.string.main)))
-//            {
-//                friendListController.addContact(name, email);
-//                id = friendListController.getID();
-//            }
-//
-//            adapter = friendListController.getAdapter();
-//
-//            ListView lvFriendList = (ListView) findViewById(R.id.lvFriendList);
-//            lvFriendList.setAdapter(adapter);
-//            registerForContextMenu(lvFriendList);
-//        }
-        friendListController = new FriendListController(this, friendManager);
         friendListController = new FriendListController(this, friendManager);
         if(callingClass.equals(getResources().getString(R.string.main)))
         {
@@ -114,6 +93,7 @@ public class DisplayContactActivity extends AppCompatActivity {
             intent.putExtra(getResources().getString(R.string.email), adapter.getItem(listPos).getEmail());
             intent.putExtra(getResources().getString(R.string.id), adapter.getItem(listPos).getID());
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+            intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
             startActivity(intent);
         }
         else if(menuItemName.equals(menuItems[1]))
@@ -128,7 +108,7 @@ public class DisplayContactActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu)
     {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu, menu);
+        getMenuInflater().inflate(R.menu.meeting_menu, menu);
         return true;
     }
 
@@ -138,8 +118,30 @@ public class DisplayContactActivity extends AppCompatActivity {
         if(item.getItemId() == R.id.action_addContact)
         {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra(getResources().getString(R.string.addContact),"add button");
+            intent.putExtra(getResources().getString(R.string.addContact),getResources().getString(R.string.add_button));
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+            intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            startActivity(intent);
+        }
+        else if(item.getItemId() == R.id.action_home)
+        {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+            intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            startActivity(intent);
+        }
+        else if(item.getItemId() == R.id.action_addMeeting)
+        {
+            Intent intent = new Intent(this, AddMeetingActivity.class);
+            intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+            intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            startActivity(intent);
+        }
+        else if(item.getItemId() == R.id.action_displayMeeting)
+        {
+            Intent intent = new Intent(this, DisplayMeetingActivity.class);
+            intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+            intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
             startActivity(intent);
         }
         return true;

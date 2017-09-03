@@ -20,66 +20,56 @@
         android:layout_marginTop="8dp"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="8dp"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:weightSum="1">
 
 
         <TextView
             android:id="@+id/tvContact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/contact"
             android:gravity="center"
             android:paddingBottom="50dp"
             android:paddingTop="50dp"
+            android:text="@string/welcome"
+            android:textSize="20sp"
             tools:layout_editor_absoluteX="164dp"
             tools:layout_editor_absoluteY="33dp" />
+
+        <TextView
+            android:id="@+id/tvInstruct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/instruction"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/bAddContact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/addContact"
+            android:layout_marginTop="80dp"
             android:layout_gravity="center_horizontal"
             tools:layout_editor_absoluteX="139dp"
             tools:layout_editor_absoluteY="258dp" />
 
         <Button
-            android:id="@+id/bDisContact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/contactList"
+            android:id="@+id/btDisplayContact"
+            android:layout_width="245dp"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
-            tools:layout_editor_absoluteX="137dp"
-            tools:layout_editor_absoluteY="393dp" />
-
-        <TextView
-            android:id="@+id/tvMeeting"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="50dp"
-            android:paddingBottom="50dp"
-            android:text="@string/meeting"
-            android:gravity="center"
-            tools:layout_editor_absoluteX="164dp"
-            tools:layout_editor_absoluteY="247dp" />
+            android:text="@string/contactList" />
 
         <Button
-            android:id="@+id/bAddMeeting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/addMeeting"
+            android:id="@+id/btDisplayMeeting"
+            android:layout_width="251dp"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
-            tools:layout_editor_absoluteX="141dp"
-            tools:layout_editor_absoluteY="107dp" />
-
-        <Button
-            android:id="@+id/bDisMeeting"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/meetingList"
-            android:layout_gravity="center_horizontal"
-            tools:layout_editor_absoluteX="104dp"
-            tools:layout_editor_absoluteY="368dp" />
+            android:text="@string/displaymeetingList"
+            android:layout_weight="0.12" />
 
     </LinearLayout>
 

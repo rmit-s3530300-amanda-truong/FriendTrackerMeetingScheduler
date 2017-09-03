@@ -14,13 +14,11 @@ import java.util.ArrayList;
 public class FriendManager implements Serializable{
 
     private ArrayList<Friend> friendList;
-    private ArrayList<String> friendNameList;
     private Friend friend;
     private String LOG_TAG = this.getClass().getName();
 
     public FriendManager() {
         friendList = new ArrayList<Friend>();
-        friendNameList = new ArrayList<String>();
     }
 
     public void addFriend(Friend friend) {
@@ -28,7 +26,6 @@ public class FriendManager implements Serializable{
             Log.i(LOG_TAG, "Error: Friend list already contains " + friend);
         } else {
             friendList.add(friend);
-            friendNameList.add(friend.getName());
         }
     }
 
@@ -37,7 +34,6 @@ public class FriendManager implements Serializable{
         if(friendList.contains(friend))
         {
             friendList.remove(friend);
-            friendNameList.add(friend.getName());
         }
         else
         {
@@ -60,11 +56,6 @@ public class FriendManager implements Serializable{
     public ArrayList<Friend> getFriendList()
     {
         return friendList;
-    }
-
-    public ArrayList<String> getFriendNameList()
-    {
-        return friendNameList;
     }
 
 }

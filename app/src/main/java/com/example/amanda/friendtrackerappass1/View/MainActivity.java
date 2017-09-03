@@ -1,15 +1,18 @@
 package com.example.amanda.friendtrackerappass1.View;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.amanda.friendtrackerappass1.Controller.MainMenuController;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
+import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
 
 import java.io.Serializable;
@@ -19,48 +22,46 @@ public class MainActivity extends AppCompatActivity{
     private String LOG_TAG = this.getClass().getName();
     private MainMenuController controller;
     private FriendManager friendManager;
+    private MeetingManager meetingManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        controller = new MainMenuController(this);
-
         Log.i(LOG_TAG, "onCreate()");
 
         Button bAddContact = (Button) findViewById(R.id.bAddContact);
-        Button bDisContact = (Button) findViewById(R.id.bDisContact);
-        Button bAddMeeting = (Button) findViewById(R.id.bAddMeeting);
-        Button bDisMeeting = (Button) findViewById(R.id.bDisMeeting);
+        Button bDisContact = (Button) findViewById(R.id.btDisplayContact);
+        Button bDisMeeting = (Button) findViewById(R.id.btDisplayMeeting);
         TextView tvContact = (TextView) findViewById(R.id.tvContact);
-        TextView tvMeeting = (TextView) findViewById(R.id.tvMeeting);
+        TextView tvInstruct = (TextView) findViewById(R.id.tvInstruct);
 
-        tvContact.setText(R.string.contact);
-        tvMeeting.setText(R.string.meeting);
-
-        bAddContact.setOnClickListener(controller);
-
-        bDisContact.setOnClickListener(controller);
-
-        bAddMeeting.setOnClickListener(controller);
-
-        bDisMeeting.setOnClickListener(controller);
+        controller = new MainMenuController(this);
 
         Bundle buttonInfo = getIntent().getExtras();
         if(buttonInfo != null)
         {
             String buttonStr = buttonInfo.getString(getResources().getString(R.string.addContact));
-            if(buttonStr.equals(getResources().getString(R.string.add_button)))
+            if(buttonStr != null)
             {
-                controller.addContact();
+                if(buttonStr.equals(getResources().getString(R.string.add_button)))
+                {
+                    controller.addContact();
+                }
             }
             friendManager = (FriendManager) buttonInfo.getSerializable(getResources().getString(R.string.friendManager));
+            meetingManager = (MeetingManager) buttonInfo.getSerializable(getResources().getString(R.string.meetingManager));
         }
         else
         {
             friendManager = new FriendManager();
+            meetingManager = new MeetingManager();
         }
+
+        bAddContact.setOnClickListener(controller);
+        bDisContact.setOnClickListener(new DisContactMainController());
+        bDisMeeting.setOnClickListener(new DisMeetingMainController());
     }
 
     @Override
@@ -126,7 +127,29 @@ public class MainActivity extends AppCompatActivity{
         intent.putExtra(getResources().getString(R.string.name),name);
         intent.putExtra(getResources().getString(R.string.email),email);
         intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+        intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
         intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.main));
         startActivity(intent);
    }
+
+    private class DisContactMainController implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, DisplayContactActivity.class);
+            intent.putExtra(getResources().getString(R.string.className),getResources().getString(R.string.contactList));
+            intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+            intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            startActivity(intent);
+        }
+    }
+
+    private class DisMeetingMainController implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, DisplayMeetingActivity.class);
+            intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+            intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            startActivity(intent);
+        }
+    }
 }

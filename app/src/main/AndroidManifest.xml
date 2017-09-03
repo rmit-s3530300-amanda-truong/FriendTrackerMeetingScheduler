@@ -20,8 +20,10 @@
         </activity>
         <activity android:name=".View.DisplayContactActivity" />
         <activity android:name=".View.AddMeetingActivity" />
-        <activity android:name=".View.DisplayMeetingActivity" />
-        <activity android:name=".View.EditContactActivity"></activity>
+        <activity android:name=".View.EditContactActivity" />
+        <activity android:name=".View.EditMeetingActivity" />
+        <activity android:name=".View.InviteFriendActivity" />
+        <activity android:name=".View.DisplayMeetingActivity"></activity>
     </application>
 
 </manifest>

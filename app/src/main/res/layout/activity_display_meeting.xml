@@ -6,4 +6,33 @@
     android:layout_height="match_parent"
     tools:context="com.example.amanda.friendtrackerappass1.View.DisplayMeetingActivity">
 
+    <LinearLayout
+        android:layout_width="582dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:weightSum="1"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvMeetingList"
+            android:layout_width="384dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/meetingList" />
+
+        <ListView
+            android:id="@+id/lvMeetingList"
+            android:layout_width="534dp"
+            android:layout_height="538dp"
+            tools:layout_editor_absoluteX="292dp"
+            tools:layout_editor_absoluteY="114dp" />
+
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>

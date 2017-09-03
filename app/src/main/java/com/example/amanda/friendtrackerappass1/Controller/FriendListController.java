@@ -1,12 +1,11 @@
 package com.example.amanda.friendtrackerappass1.Controller;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.R;
-import com.example.amanda.friendtrackerappass1.View.FriendListAdapter;
+import com.example.amanda.friendtrackerappass1.ViewModel.FriendListAdapter;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +19,6 @@ public class FriendListController {
 
     private FriendManager friendManager;
     private ArrayList<Friend> friendList;
-    private ArrayList<String> friendNameList;
     private Activity activity;
     private FriendListAdapter adapter;
     private String uuid;
@@ -31,7 +29,6 @@ public class FriendListController {
         this.friendManager = friendManager;
         this.activity = activity;
         friendList = friendManager.getFriendList();
-        friendNameList = friendManager.getFriendNameList();
         adapter = new FriendListAdapter(activity, R.layout.activity_list_view, friendList);
     }
 
