@@ -32,7 +32,9 @@
     <string name="home">Home</string>
     <string name="title">Enter the title for this meeting</string>
     <string name="startDate">Enter Start date</string>
+    <string name="startTime">Start Time</string>
     <string name="endDate">Enter End date</string>
+    <string name="endTime">End Time</string>
     <string name="latitude">Enter the location LATITUDE for this meeting</string>
     <string name="longitude">Enter the location LONGITUDE for this meeting</string>
     <string name="invite">Invite Friends</string>
@@ -62,4 +64,14 @@
     <string name="oct">Oct</string>
     <string name="nov">Nov</string>
     <string name="dec">Dec</string>
+    <string name="removeInvited">Remove Friends</string>
+    <string name="duplicateFriend">Invalid: Friend chosen is already invited</string>
+    <string name="invTitle">Title Invite</string>
+    <string name="invStDate">Start Date Invite</string>
+    <string name="invStTime">Start Time Invite</string>
+    <string name="invEndDate">End Date Invite</string>
+    <string name="invEndTime">End Time Invite</string>
+    <string name="invLat">Lat invite</string>
+    <string name="invLon">Lon invite</string>
+    <string name="extra">Extra</string>
 </resources>

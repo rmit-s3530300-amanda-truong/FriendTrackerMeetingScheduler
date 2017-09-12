@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -12,28 +14,22 @@ import android.widget.TimePicker;
 
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
-import com.example.amanda.friendtrackerappass1.Model.Meeting;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
-import com.example.amanda.friendtrackerappass1.View.AddMeetingActivity;
+import com.example.amanda.friendtrackerappass1.View.DisplayMeetingActivity;
 import com.example.amanda.friendtrackerappass1.View.EditMeetingActivity;
 
-import android.text.format.DateFormat;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
 
 /**
  * Created by amanda on 3/09/2017.
  */
 
-public class MeetingController implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class EditMeetingController implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private String uuid;
-    private AddMeetingActivity activity;
+    private EditMeetingActivity activity;
     private FriendManager friendManager;
     private String title;
     private String startDate;
@@ -56,16 +52,12 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
     private int endYear, endMonth, endDay, endHour, endMinute;
     private int endYearFinal, endMonthFinal, endDayFinal, endHourFinal, endMinuteFinal;
     private String LOG_TAG = this.getClass().getName();
+    private boolean saved = false;
 
-    public MeetingController(Activity activity, FriendManager friendManager, MeetingManager meetingManager){
-        this.activity = (AddMeetingActivity) activity;
+    public EditMeetingController(Activity activity, FriendManager friendManager, MeetingManager meetingManager){
+        this.activity = (EditMeetingActivity) activity;
         this.meetingManager = meetingManager;
         this.friendManager = friendManager;
-    }
-
-    public void generateID()
-    {
-        uuid = UUID.randomUUID().toString();
     }
 
     @Override
@@ -99,57 +91,18 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
         {
             activity.goToRemove();
         }
-        else if(buttonClicked == R.id.btMeetingAdd)
+        else if(buttonClicked == R.id.btSave)
         {
-            ArrayList<String> info = activity.sendInfo();
-            title = info.get(0);
-            startDate = info.get(1);
-            startTime = info.get(2);
-            endDate = info.get(3);
-            endTime = info.get(4);
-            lat = info.get(5);
-            lon = info.get(6);
-            String[] startDateSplit = startDate.split("-");
-            startYearFinal = Integer.parseInt(startDateSplit[2]);
-            startMonthFinal = Integer.parseInt(startDateSplit[1]);
-            startDayFinal = Integer.parseInt(startDateSplit[0]);
-
-            Log.i(LOG_TAG, String.valueOf(startYearFinal));
-            Log.i(LOG_TAG, String.valueOf(startMonthFinal));
-            Log.i(LOG_TAG, String.valueOf(startDayFinal));
-
-            String[] startTimeSplit = startTime.split(":");
-            startHourFinal = Integer.parseInt(startTimeSplit[0]);
-            startMinuteFinal = Integer.parseInt(startTimeSplit[1]);
-
-            Log.i(LOG_TAG, String.valueOf(startHourFinal));
-            Log.i(LOG_TAG, String.valueOf(startMinuteFinal));
-
-            String[] endDateSplit = endDate.split("-");
-            endYearFinal = Integer.parseInt(endDateSplit[2]);
-            endMonthFinal = Integer.parseInt(endDateSplit[1]);
-            endDayFinal = Integer.parseInt(endDateSplit[0]);
-
-            Log.i(LOG_TAG, String.valueOf(endYearFinal));
-            Log.i(LOG_TAG, String.valueOf(endMonthFinal));
-            Log.i(LOG_TAG, String.valueOf(endDayFinal));
-
-            String[] endTimeSplit = endTime.split(":");
-            endHourFinal = Integer.parseInt(endTimeSplit[0]);
-            endMinuteFinal = Integer.parseInt(endTimeSplit[1]);
-
-            Log.i(LOG_TAG, String.valueOf(endHourFinal));
-            Log.i(LOG_TAG, String.valueOf(endMinuteFinal));
-
             boolean check = validateDateTime();
             if(check == true)
             {
-                generateID();
-                ArrayList<Friend> invitedFriends = activity.getInvitedFriends();
-                Meeting meeting = new Meeting(uuid, title, startDate + " " + startTime, endDate + " " + endTime,
-                        invitedFriends, lat+":"+lon);
-                meetingManager.scheduleMeeting(meeting);
-                activity.goToMeetingList();
+                activity.saveValues();
+                AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+                alert.setTitle(activity.getResources().getString(R.string.savedInfo));
+                alert.setMessage(activity.getResources().getString(R.string.savedMessaged));
+                alert.setPositiveButton(activity.getResources().getString(R.string.okay), null);
+                alert.show();
+                saved = true;
             }
             else
             {
@@ -158,6 +111,26 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
                 builder.setMessage(activity.getResources().getString(R.string.invAfter));
                 builder.setPositiveButton(activity.getResources().getString(R.string.okay),null);
                 builder.show();
+            }
+        }
+        else if(buttonClicked == R.id.btBack)
+        {
+            if(saved == true)
+            {
+                Intent intent = new Intent(activity, DisplayMeetingActivity.class);
+                intent.putExtra(activity.getResources().getString(R.string.friendManager), friendManager);
+                intent.putExtra(activity.getResources().getString(R.string.meetingManager), meetingManager);
+                intent.putExtra(activity.getResources().getString(R.string.className), activity.getResources().getString(R.string.edit));
+                activity.startActivity(intent);
+            }
+            else
+            {
+                AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+                alert.setTitle(activity.getResources().getString(R.string.back));
+                alert.setMessage(activity.getResources().getString(R.string.confirmMessage));
+                alert.setPositiveButton(activity.getResources().getString(R.string.yes), new ConfirmController());
+                alert.setNegativeButton(activity.getResources().getString(R.string.no), null);
+                alert.show();
             }
         }
     }
@@ -223,6 +196,8 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
         }
     }
 
+
+
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         if(afterCheck == false)
@@ -266,6 +241,17 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
             endHourFinal = i;
             endMinuteFinal = i1;
             activity.setEndTime(endHourFinal, endMinuteFinal);
+        }
+    }
+
+    private class ConfirmController implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+            Intent intent = new Intent(activity, DisplayMeetingActivity.class);
+            intent.putExtra(activity.getResources().getString(R.string.friendManager), friendManager);
+            intent.putExtra(activity.getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(activity.getResources().getString(R.string.className), activity.getResources().getString(R.string.edit));
+            activity.startActivity(intent);
         }
     }
 }

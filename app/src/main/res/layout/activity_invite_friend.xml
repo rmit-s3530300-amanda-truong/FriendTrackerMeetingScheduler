@@ -38,14 +38,7 @@
             <ListView
                 android:id="@+id/listViewInvite"
                 android:layout_width="match_parent"
-                android:layout_height="407dp" />
-
-            <Button
-                android:id="@+id/btInvite"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/invite" />
-
+                android:layout_height="match_parent" />
         </LinearLayout>
     </RelativeLayout>
 

@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.amanda.friendtrackerappass1.Controller.MeetingController;
+import com.example.amanda.friendtrackerappass1.Controller.EditMeetingController;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.Model.Meeting;
@@ -25,8 +25,17 @@ public class EditMeetingActivity extends AppCompatActivity {
     private MeetingManager meetingManager;
     private String title;
     private String startDate;
+    private String startTime;
+    private String endTime;
     private String id;
     private String endDate;
+    private String invTitle;
+    private String invSDate;
+    private String invSTime;
+    private String invEDate;
+    private String invETime;
+    private String lat;
+    private String lon;
     private String location;
     private ArrayList<Friend> invitedFriends;
     private EditText etMeetingTitle;
@@ -38,8 +47,14 @@ public class EditMeetingActivity extends AppCompatActivity {
     private EditText etLongitude;
     private Button btStartDate;
     private Button btEndDate;
+    private TextView tvInvitedFriend;
+    private Button btInvite;
+    private Button btSave;
+    private Button btBack;
+    private Button btRemoveInvited;
+    private String className;
     private boolean saved = false;
-    private MeetingController meetingController;
+    private EditMeetingController meetingController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +70,12 @@ public class EditMeetingActivity extends AppCompatActivity {
         tvEndTime = (TextView) findViewById(R.id.tvEndTime);
         etLatitude = (EditText) findViewById(R.id.etLatitude);
         etLongitude = (EditText) findViewById(R.id.etLongitude);
+        tvInvitedFriend = (TextView) findViewById(R.id.tvInvitedFriend);
 
-        Button btInvite = (Button) findViewById(R.id.btMeetingInvite);
-        Button btSave = (Button) findViewById(R.id.btSave);
-        Button btBack = (Button) findViewById(R.id.btBack);
+        btInvite = (Button) findViewById(R.id.btMeetingInvite);
+        btRemoveInvited = (Button) findViewById(R.id.btRemoveInvited);
+        btSave = (Button) findViewById(R.id.btSave);
+        btBack = (Button) findViewById(R.id.btBack);
 
         Bundle contactInfo = getIntent().getExtras();
         if(contactInfo != null)
@@ -68,78 +85,226 @@ public class EditMeetingActivity extends AppCompatActivity {
             startDate = (String) contactInfo.getString(getResources().getString(R.string.startDate));
             endDate = (String) contactInfo.getString(getResources().getString(R.string.endDate));
             location = (String) contactInfo.getString(getResources().getString(R.string.location));
+            invTitle = (String) contactInfo.getString(getResources().getString(R.string.invTitle));
+            invSDate = (String) contactInfo.getString(getResources().getString(R.string.invStDate));
+            invSTime = (String) contactInfo.getString(getResources().getString(R.string.invStTime));
+            invEDate = (String) contactInfo.getString(getResources().getString(R.string.invEndDate));
+            invETime = (String) contactInfo.getString(getResources().getString(R.string.invEndTime));
+            lat = (String) contactInfo.getString(getResources().getString(R.string.invLat));
+            lon = (String) contactInfo.getString(getResources().getString(R.string.invLon));
             invitedFriends = (ArrayList<Friend>) contactInfo.get(getResources().getString(R.string.invite));
             friendManager = (FriendManager) contactInfo.getSerializable(getResources().getString(R.string.friendManager));
             meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
+            className = (String) contactInfo.getString(getResources().getString(R.string.className));
         }
 
-        //meetingController = new MeetingController(this, friendManager, meetingManager);
+        meetingController = new EditMeetingController(this, friendManager, meetingManager);
+        if(className.equals(getResources().getString(R.string.invite)))
+        {
+            initialiseValues();
+        }
+        else if(className.equals(getResources().getString(R.string.displaymeetingList)))
+        {
+            etMeetingTitle.setText(title);
+            String[] startDateSplit = startDate.split(" ");
+            tvStartDate.setText(startDateSplit[0]);
+            tvStartTime.setText(startDateSplit[1]);
+            String[] endDateSplit = endDate.split(" ");
+            tvEndDate.setText(endDateSplit[0]);
+            tvEndTime.setText(endDateSplit[1]);
+            String[] locationSplit = location.split(":");
+            etLatitude.setText(locationSplit[0]);
+            etLongitude.setText(locationSplit[1]);
+            setInvitedFriends();
+        }
+
+        btStartDate.setOnClickListener(meetingController);
+        btEndDate.setOnClickListener(meetingController);
+        btInvite.setOnClickListener(meetingController);
+        btRemoveInvited.setOnClickListener(meetingController);
+        btSave.setOnClickListener(meetingController);
+        btBack.setOnClickListener(meetingController);
+    }
+
+    public void setTitle(String title)
+    {
         etMeetingTitle.setText(title);
-        String[] startDateSplit = startDate.split(" ");
-        tvStartDate.setText(startDateSplit[0]);
-        tvStartTime.setText(startDateSplit[1]);
-        String[] endDateSplit = endDate.split(" ");
-        tvEndDate.setText(endDateSplit[0]);
-        tvEndTime.setText(endDateSplit[1]);
-        String[] locationSplit = location.split(":");
-        etLatitude.setText(locationSplit[0]);
-        etLongitude.setText(locationSplit[1]);
-
-        //btStartDate.setOnClickListener(meetingController);
-        //btEndDate.setOnClickListener(meetingController);
-        btSave.setOnClickListener(new SaveController());
-        btBack.setOnClickListener(new BackController());
     }
 
-    private class SaveController implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            Meeting meeting = meetingManager.findMeeting(id);
-            meeting.editTitle(etMeetingTitle.getText().toString());
-            meeting.editStartDate(tvStartDate.getText().toString() + " " + tvStartTime.getText().toString());
-            meeting.editEndDate(tvEndDate.getText().toString() + " " + tvEndTime.getText().toString());
-            //havent implemented edit invited friends yet
-            meeting.editLocation(etLatitude.getText().toString(), etLongitude.getText().toString());
-            AlertDialog.Builder alert = new AlertDialog.Builder(EditMeetingActivity.this);
-            alert.setTitle(getResources().getString(R.string.savedInfo));
-            alert.setMessage(getResources().getString(R.string.savedMessaged));
-            alert.setPositiveButton(getResources().getString(R.string.okay), null);
-            alert.show();
-            saved = true;
-        }
+    public void setStartDate(int day, int month, int year)
+    {
+        tvStartDate.setText(day + "-" + (month+1) + "-" + year);
     }
 
-    private class BackController implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            if(saved == true)
+    public void setStartTime(int hour, int minute)
+    {
+        tvStartTime.setText(String.format("%02d:%02d", hour, minute));
+    }
+
+    public void setEndDate(int day, int month, int year)
+    {
+        tvEndDate.setText(day + "-" + (month+1) + "-" + year);
+    }
+
+    public void setEndTime(int hour, int minute)
+    {
+        tvEndTime.setText(String.format("%02d:%02d", hour, minute));
+    }
+
+    public void setLatitude(String lat)
+    {
+        etLatitude.setText(lat);
+    }
+
+    public void setLongitude(String lon)
+    {
+        etLongitude.setText(lon);
+    }
+
+    public void setInvitedFriends()
+    {
+        String appendedFriends = "";
+        for(Friend f: invitedFriends)
+        {
+            if(appendedFriends.equals(""))
             {
-                Intent intent = new Intent(EditMeetingActivity.this, DisplayMeetingActivity.class);
-                intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
-                intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
-                intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.edit));
-                startActivity(intent);
+                appendedFriends = appendedFriends + f.getName();
             }
             else
             {
-                AlertDialog.Builder alert = new AlertDialog.Builder(EditMeetingActivity.this);
-                alert.setTitle(getResources().getString(R.string.back));
-                alert.setMessage(getResources().getString(R.string.confirmMessage));
-                alert.setPositiveButton(getResources().getString(R.string.yes), new ConfirmController());
-                alert.setNegativeButton(getResources().getString(R.string.no), null);
-                alert.show();
+                appendedFriends = appendedFriends + ", " + f.getName();
             }
         }
+        tvInvitedFriend.setText(appendedFriends);
+    }
 
-        private class ConfirmController implements DialogInterface.OnClickListener {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = new Intent(EditMeetingActivity.this, DisplayMeetingActivity.class);
-                intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
-                intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
-                intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.edit));
-                startActivity(intent);
-            }
+    public void goToInvite()
+    {
+        Intent intent = new Intent(this, InviteFriendActivity.class);
+        intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+        intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+        intent.putExtra(getResources().getString(R.string.invite), invitedFriends);
+        intent.putExtra(getResources().getString(R.string.id), id);
+        intent.putExtra(getResources().getString(R.string.title), etMeetingTitle.getText().toString());
+        intent.putExtra(getResources().getString(R.string.startDate), tvStartDate.getText().toString());
+        intent.putExtra(getResources().getString(R.string.startTime), tvStartTime.getText().toString());
+        intent.putExtra(getResources().getString(R.string.endDate), tvEndDate.getText().toString());
+        intent.putExtra(getResources().getString(R.string.endTime), tvEndTime.getText().toString());
+        intent.putExtra(getResources().getString(R.string.latitude), etLatitude.getText().toString());
+        intent.putExtra(getResources().getString(R.string.longitude), etLongitude.getText().toString());
+        intent.putExtra(getResources().getString(R.string.className),getResources().getString(R.string.edit));
+        startActivity(intent);
+    }
+
+    public void goToRemove()
+    {
+        Intent intent = new Intent(this, InviteFriendActivity.class);
+        intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+        intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+        intent.putExtra(getResources().getString(R.string.invite), invitedFriends);
+        intent.putExtra(getResources().getString(R.string.id), id);
+        intent.putExtra(getResources().getString(R.string.title), etMeetingTitle.getText().toString());
+        intent.putExtra(getResources().getString(R.string.startDate), tvStartDate.getText().toString());
+        intent.putExtra(getResources().getString(R.string.startTime), tvStartTime.getText().toString());
+        intent.putExtra(getResources().getString(R.string.endDate), tvEndDate.getText().toString());
+        intent.putExtra(getResources().getString(R.string.endTime), tvEndTime.getText().toString());
+        intent.putExtra(getResources().getString(R.string.latitude), etLatitude.getText().toString());
+        intent.putExtra(getResources().getString(R.string.longitude), etLongitude.getText().toString());
+        intent.putExtra(getResources().getString(R.string.className),getResources().getString(R.string.removeInvited));
+        intent.putExtra(getResources().getString(R.string.extra), getResources().getString(R.string.edit));
+        startActivity(intent);
+    }
+
+    public void initialiseValues()
+    {
+        setInvitedFriends();
+        if(invTitle != null)
+        {
+            setTitle(invTitle);
+        }
+        if(invSDate != null)
+        {
+            String[] dateSplit = invSDate.split("-");
+            setStartDate(Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[1])-1, Integer.parseInt(dateSplit[2]));
+        }
+        if(invSTime != null)
+        {
+            String[] timeSplit = invSTime.split(":");
+            setStartTime(Integer.parseInt(timeSplit[0]), Integer.parseInt(timeSplit[1]));
+        }
+        if(invEDate != null)
+        {
+            String[] dateSplit = invEDate.split("-");
+            setEndDate(Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[1])-1, Integer.parseInt(dateSplit[2]));
+        }
+        if(invETime != null)
+        {
+            String[] timeSplit = invETime.split(":");
+            setEndTime(Integer.parseInt(timeSplit[0]), Integer.parseInt(timeSplit[1]));
+        }
+        if(lat != null)
+        {
+            setLatitude(lat);
+        }
+        if(lon != null)
+        {
+            setLongitude(lon);
         }
     }
+
+    public void saveValues()
+    {
+        Meeting meeting = meetingManager.findMeeting(id);
+        meeting.editTitle(etMeetingTitle.getText().toString());
+        meeting.editStartDate(tvStartDate.getText().toString() + " " + tvStartTime.getText().toString());
+        meeting.editEndDate(tvEndDate.getText().toString() + " " + tvEndTime.getText().toString());
+        meeting.editLocation(etLatitude.getText().toString(), etLongitude.getText().toString());
+        meeting.editInvitedFriends(invitedFriends);
+    }
+
+//    private class SaveController implements View.OnClickListener {
+//        @Override
+//        public void onClick(View view) {
+//            AlertDialog.Builder alert = new AlertDialog.Builder(EditMeetingActivity.this);
+//            alert.setTitle(getResources().getString(R.string.savedInfo));
+//            alert.setMessage(getResources().getString(R.string.savedMessaged));
+//            alert.setPositiveButton(getResources().getString(R.string.okay), null);
+//            alert.show();
+//            saved = true;
+//        }
+//    }
+
+//    private class BackController implements View.OnClickListener {
+//        @Override
+//        public void onClick(View view) {
+//            if(saved == true)
+//            {
+//                Intent intent = new Intent(EditMeetingActivity.this, DisplayMeetingActivity.class);
+//                intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+//                intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+//                intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.edit));
+//                startActivity(intent);
+//            }
+//            else
+//            {
+//                AlertDialog.Builder alert = new AlertDialog.Builder(EditMeetingActivity.this);
+//                alert.setTitle(getResources().getString(R.string.back));
+//                alert.setMessage(getResources().getString(R.string.confirmMessage));
+//                alert.setPositiveButton(getResources().getString(R.string.yes), new ConfirmController());
+//                alert.setNegativeButton(getResources().getString(R.string.no), null);
+//                alert.show();
+//            }
+//        }
+//
+//        private class ConfirmController implements DialogInterface.OnClickListener {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                Intent intent = new Intent(EditMeetingActivity.this, DisplayMeetingActivity.class);
+//                intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+//                intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+//                intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.edit));
+//                startActivity(intent);
+//            }
+//        }
+//    }
 }

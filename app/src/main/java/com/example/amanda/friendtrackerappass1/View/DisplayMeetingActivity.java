@@ -77,6 +77,7 @@ public class DisplayMeetingActivity extends AppCompatActivity {
             intent.putExtra(getResources().getString(R.string.invite), adapter.getItem(listPos).getInvitedFriends());
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.displaymeetingList));
             startActivity(intent);
         }
         else if(menuItemName.equals(menuItems[1]))

@@ -44,7 +44,6 @@ public class InviteFriendAdapter extends ArrayAdapter<Friend> {
         convertView = inflater.inflate(R.layout.activity_invite_list_view, parent, false);
         TextView tv = (TextView) convertView.findViewById(R.id.textViewInvite);
         CheckBox cb = (CheckBox) convertView.findViewById(R.id.checkBox);
-
         tv.setText(friendList.get(position).getName());
         return convertView;
     }
