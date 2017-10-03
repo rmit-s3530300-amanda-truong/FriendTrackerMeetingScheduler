@@ -252,6 +252,26 @@ public class EditMeetingActivity extends AppCompatActivity {
         }
     }
 
+    public String getStartDate()
+    {
+        return tvStartDate.getText().toString();
+    }
+
+    public String getStartTime()
+    {
+        return tvStartTime.getText().toString();
+    }
+
+    public String getEndDate()
+    {
+        return tvEndDate.getText().toString();
+    }
+
+    public String getEndTime()
+    {
+        return tvEndTime.getText().toString();
+    }
+
     public void saveValues()
     {
         Meeting meeting = meetingManager.findMeeting(id);
@@ -261,50 +281,4 @@ public class EditMeetingActivity extends AppCompatActivity {
         meeting.editLocation(etLatitude.getText().toString(), etLongitude.getText().toString());
         meeting.editInvitedFriends(invitedFriends);
     }
-
-//    private class SaveController implements View.OnClickListener {
-//        @Override
-//        public void onClick(View view) {
-//            AlertDialog.Builder alert = new AlertDialog.Builder(EditMeetingActivity.this);
-//            alert.setTitle(getResources().getString(R.string.savedInfo));
-//            alert.setMessage(getResources().getString(R.string.savedMessaged));
-//            alert.setPositiveButton(getResources().getString(R.string.okay), null);
-//            alert.show();
-//            saved = true;
-//        }
-//    }
-
-//    private class BackController implements View.OnClickListener {
-//        @Override
-//        public void onClick(View view) {
-//            if(saved == true)
-//            {
-//                Intent intent = new Intent(EditMeetingActivity.this, DisplayMeetingActivity.class);
-//                intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
-//                intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
-//                intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.edit));
-//                startActivity(intent);
-//            }
-//            else
-//            {
-//                AlertDialog.Builder alert = new AlertDialog.Builder(EditMeetingActivity.this);
-//                alert.setTitle(getResources().getString(R.string.back));
-//                alert.setMessage(getResources().getString(R.string.confirmMessage));
-//                alert.setPositiveButton(getResources().getString(R.string.yes), new ConfirmController());
-//                alert.setNegativeButton(getResources().getString(R.string.no), null);
-//                alert.show();
-//            }
-//        }
-//
-//        private class ConfirmController implements DialogInterface.OnClickListener {
-//            @Override
-//            public void onClick(DialogInterface dialogInterface, int i) {
-//                Intent intent = new Intent(EditMeetingActivity.this, DisplayMeetingActivity.class);
-//                intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
-//                intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
-//                intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.edit));
-//                startActivity(intent);
-//            }
-//        }
-//    }
 }
