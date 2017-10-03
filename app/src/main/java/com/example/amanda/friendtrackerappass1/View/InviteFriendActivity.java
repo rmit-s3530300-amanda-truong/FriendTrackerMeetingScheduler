@@ -2,27 +2,27 @@ package com.example.amanda.friendtrackerappass1.View;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.amanda.friendtrackerappass1.Controller.EditMeetingController;
+import com.example.amanda.friendtrackerappass1.Model.DummyLocationService;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
 import com.example.amanda.friendtrackerappass1.ViewModel.FriendListAdapter;
-import com.example.amanda.friendtrackerappass1.ViewModel.InviteFriendAdapter;
 
 import java.lang.reflect.Array;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class InviteFriendActivity extends Activity {
 
@@ -119,11 +119,17 @@ public class InviteFriendActivity extends Activity {
                     else
                     {
                         invitedFriends.add(friend);
+//                        String[] location = findMidPoint().split(", ");
+//                        lat = location[0];
+//                        lon = location[1];
                     }
 
-                    if(addCheck == true)
+                    if(addCheck)
                     {
                         invitedFriends.add(friend);
+//                        String[] location = findMidPoint().split(", ");
+//                        lat = location[0];
+//                        lon = location[1];
                     }
                     if(className.equals(getResources().getString(R.string.addMeeting)))
                     {
@@ -136,6 +142,44 @@ public class InviteFriendActivity extends Activity {
                 }
             });
         }
+    }
+
+    public String findMidPoint()
+    {
+        int count = 1;
+        Double myLat = -30.35;
+        Double myLon = 50.13;
+        Double latMid = myLat;
+        Double lonMid = myLon;
+        DummyLocationService dummyLocationService = DummyLocationService.getSingletonInstance(this);
+
+        for(Friend f: invitedFriends)
+        {
+            ArrayList<String> locationInfo = f.getLocation();
+            int size = locationInfo.size()/5;
+            for(String s: locationInfo)
+            {
+                //List<DummyLocationService.FriendLocation> matched = dummyLocationService
+                        //.getFriendLocationsForTime(, 2, 0);
+                Log.i(LOG_TAG, "Matched Query:");
+                //dummyLocationService.log(matched);
+            }
+            for(int i=0; i<locationInfo.size(); i++)
+            {
+
+            }
+            String lon = locationInfo.get(4);
+            String lat =  locationInfo.get(5);
+            latMid = latMid + Double.parseDouble(lat);
+            lonMid = lonMid + Double.parseDouble(lon);
+            count++;
+        }
+
+        latMid = latMid/count;
+        lonMid = lonMid/count;
+
+        String finalMid = String.valueOf(latMid) + ", " + String.valueOf(lonMid);
+        return finalMid;
     }
 
     public void goToAddMeeting()

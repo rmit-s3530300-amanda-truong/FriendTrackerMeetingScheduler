@@ -3,9 +3,12 @@ package com.example.amanda.friendtrackerappass1.Model;
 import android.util.Log;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by Amanda on 10/08/2017.
@@ -15,6 +18,7 @@ public class Friend implements Serializable{
     private String id;
     private String name;
     private String email;
+    private ArrayList<String> locationInfo = new ArrayList<>();
     private Date birthday;
     private String LOG_TAG = this.getClass().getName();
 
@@ -73,5 +77,19 @@ public class Friend implements Serializable{
     public void editEmail(String newEmail)
     {
         email = newEmail;
+    }
+
+    public void setLocationInfo(ArrayList<String> info)
+    {
+        locationInfo = info;
+        for(String s: locationInfo)
+        {
+            Log.i(LOG_TAG, s);
+        }
+    }
+
+    public ArrayList<String> getLocation()
+    {
+        return locationInfo;
     }
 }

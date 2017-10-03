@@ -1,6 +1,7 @@
 package com.example.amanda.friendtrackerappass1.ViewModel;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 
 public class FriendListAdapter extends ArrayAdapter<Friend> {
     private ArrayList<Friend> friendList;
+    private String LOG_TAG = this.getClass().getName();
 
     public FriendListAdapter(Context context, int textViewResourceId, ArrayList<Friend> objects)
     {
@@ -37,7 +39,7 @@ public class FriendListAdapter extends ArrayAdapter<Friend> {
         View v = convertView;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.activity_list_view, null);
-        TextView tv = (TextView) v.findViewById(R.id.textView);
+        TextView tv = (TextView) v.findViewById(R.id.textView1);
         tv.setText(friendList.get(position).getName());
         return v;
     }

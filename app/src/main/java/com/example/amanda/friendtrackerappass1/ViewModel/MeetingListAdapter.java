@@ -38,7 +38,7 @@ public class MeetingListAdapter extends ArrayAdapter<Meeting> {
         View v = convertView;
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         v = inflater.inflate(R.layout.activity_list_view, null);
-        TextView tv = (TextView) v.findViewById(R.id.textView);
+        TextView tv = (TextView) v.findViewById(R.id.textView1);
         tv.setText(meetingList.get(position).getTitle());
         return v;
     }

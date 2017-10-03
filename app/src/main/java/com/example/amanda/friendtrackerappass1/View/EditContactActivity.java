@@ -140,7 +140,7 @@ public class EditContactActivity extends AppCompatActivity {
     private class BackController implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            if(saved == true)
+            if(saved)
             {
                 Intent intent = new Intent(EditContactActivity.this, DisplayContactActivity.class);
                 intent.putExtra(getResources().getString(R.string.name),etEditName.getText().toString());

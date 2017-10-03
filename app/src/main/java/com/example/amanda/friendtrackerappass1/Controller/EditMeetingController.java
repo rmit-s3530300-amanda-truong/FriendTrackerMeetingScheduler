@@ -93,8 +93,29 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
         }
         else if(buttonClicked == R.id.btSave)
         {
+            startDate = activity.getStartDate();
+            String[] startDateSplit = startDate.split("-");
+            startYearFinal = Integer.parseInt(startDateSplit[2]);
+            startMonthFinal = Integer.parseInt(startDateSplit[1]);
+            startDayFinal = Integer.parseInt(startDateSplit[0]);
+
+            startTime = activity.getStartTime();
+            String[] startTimeSplit = startTime.split(":");
+            startHourFinal = Integer.parseInt(startTimeSplit[0]);
+            startMinuteFinal = Integer.parseInt(startTimeSplit[1]);
+
+            endDate = activity.getEndDate();
+            String[] endDateSplit = endDate.split("-");
+            endYearFinal = Integer.parseInt(endDateSplit[2]);
+            endMonthFinal = Integer.parseInt(endDateSplit[1]);
+            endDayFinal = Integer.parseInt(endDateSplit[0]);
+
+            endTime = activity.getEndTime();
+            String[] endTimeSplit = endTime.split(":");
+            endHourFinal = Integer.parseInt(endTimeSplit[0]);
+            endMinuteFinal = Integer.parseInt(endTimeSplit[1]);
             boolean check = validateDateTime();
-            if(check == true)
+            if(check)
             {
                 activity.saveValues();
                 AlertDialog.Builder alert = new AlertDialog.Builder(activity);
@@ -115,7 +136,7 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
         }
         else if(buttonClicked == R.id.btBack)
         {
-            if(saved == true)
+            if(saved)
             {
                 Intent intent = new Intent(activity, DisplayMeetingActivity.class);
                 intent.putExtra(activity.getResources().getString(R.string.friendManager), friendManager);
@@ -168,7 +189,7 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
             return false;
         }
 
-        if(dateCheck == true)
+        if(dateCheck)
         {
             return true;
         }
@@ -200,7 +221,7 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        if(afterCheck == false)
+        if(!afterCheck)
         {
             startYearFinal = i;
             startMonthFinal = i1+1;
@@ -230,7 +251,7 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
 
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-        if(afterCheck == false)
+        if(!afterCheck)
         {
             startHourFinal = i;
             startMinuteFinal = i1;

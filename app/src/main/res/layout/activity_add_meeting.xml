@@ -99,6 +99,26 @@
             android:ems="10"
             android:inputType="none" />
 
+        <Button
+            android:id="@+id/btMeetingInvite"
+            android:layout_width="198dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/invite" />
+
+        <TextView
+            android:id="@+id/tvInvitedFriends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.00" />
+
+        <Button
+            android:id="@+id/btRemoveInvited"
+            android:layout_width="199dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/removeInvited" />
+
         <TextView
             android:id="@+id/tvLocation"
             android:layout_width="match_parent"
@@ -128,26 +148,6 @@
             android:layout_weight="1.00"
             android:ems="10"
             android:inputType="numberSigned" />
-
-        <Button
-            android:id="@+id/btMeetingInvite"
-            android:layout_width="198dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/invite" />
-
-        <TextView
-            android:id="@+id/tvInvitedFriends"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.00" />
-
-        <Button
-            android:id="@+id/btRemoveInvited"
-            android:layout_width="199dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/removeInvited" />
 
         <Button
             android:id="@+id/btMeetingAdd"

@@ -16,6 +16,7 @@ import com.example.amanda.friendtrackerappass1.R;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AddMeetingActivity extends AppCompatActivity {
 
@@ -39,6 +40,7 @@ public class AddMeetingActivity extends AppCompatActivity {
     private String endTime;
     private String lat;
     private String lon;
+    private Date dateTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
