@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,6 +17,7 @@ import com.example.amanda.friendtrackerappass1.R;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class AddMeetingActivity extends AppCompatActivity {
@@ -40,12 +42,15 @@ public class AddMeetingActivity extends AppCompatActivity {
     private String endTime;
     private String lat;
     private String lon;
-    private Date dateTime;
+    private Date currentDate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_meeting);
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         etMeetingTitle = (EditText) findViewById(R.id.etMeetingTitle);
         tvStartDate = (TextView) findViewById(R.id.tvStartDate);
@@ -53,7 +58,6 @@ public class AddMeetingActivity extends AppCompatActivity {
         tvStartTime = (TextView) findViewById(R.id.tvStartTime);
         tvEndTime = (TextView) findViewById(R.id.tvEndTime);
         tvInviteFriends = (TextView) findViewById(R.id.tvInvitedFriends);
-        Button btStartDate = (Button) findViewById(R.id.btStartDate);
         Button btEndDate = (Button) findViewById(R.id.btEndDate);
         etLatitude = (EditText) findViewById(R.id.etLatitude);
         etLongitude = (EditText) findViewById(R.id.etLongitude);
@@ -77,7 +81,6 @@ public class AddMeetingActivity extends AppCompatActivity {
 
         meetingController = new MeetingController(this,friendManager, meetingManager);
 
-        btStartDate.setOnClickListener(meetingController);
         btEndDate.setOnClickListener(meetingController);
         Button btInvite = (Button) findViewById(R.id.btMeetingInvite);
         Button btRemove = (Button) findViewById(R.id.btRemoveInvited);
@@ -86,6 +89,9 @@ public class AddMeetingActivity extends AppCompatActivity {
         btInvite.setOnClickListener(meetingController);
         btRemove.setOnClickListener(meetingController);
         btAdd.setOnClickListener(meetingController);
+
+        currentDate = Calendar.getInstance().getTime();
+        setCurrentTime();
     }
 
     public void setTitle(String title)
@@ -93,14 +99,10 @@ public class AddMeetingActivity extends AppCompatActivity {
         etMeetingTitle.setText(title);
     }
 
-    public void setStartDate(int day, int month, int year)
+    public void setCurrentTime()
     {
-        tvStartDate.setText(day + "-" + (month+1) + "-" + year);
-    }
-
-    public void setStartTime(int hour, int minute)
-    {
-        tvStartTime.setText(String.format("%02d:%02d", hour, minute));
+        //tvStartTime.setText(String.format("%02d:%02d", hour, minute));
+        tvStartTime.setText(currentDate.toString());
     }
 
     public void setEndDate(int day, int month, int year)
@@ -144,14 +146,12 @@ public class AddMeetingActivity extends AppCompatActivity {
     {
         ArrayList<String> info = new ArrayList<String>();
         title = etMeetingTitle.getText().toString();
-        startDate = tvStartDate.getText().toString();
         startTime = tvStartTime.getText().toString();
         endDate = tvEndDate.getText().toString();
         endTime = tvEndTime.getText().toString();
         String lat = etLatitude.getText().toString();
         String lon = etLongitude.getText().toString();
         info.add(title);
-        info.add(startDate);
         info.add(startTime);
         info.add(endDate);
         info.add(endTime);
@@ -172,13 +172,13 @@ public class AddMeetingActivity extends AppCompatActivity {
         intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
         intent.putExtra(getResources().getString(R.string.invite), invitedFriends);
         intent.putExtra(getResources().getString(R.string.title), etMeetingTitle.getText().toString());
-        intent.putExtra(getResources().getString(R.string.startDate), tvStartDate.getText().toString());
         intent.putExtra(getResources().getString(R.string.startTime), tvStartTime.getText().toString());
         intent.putExtra(getResources().getString(R.string.endDate), tvEndDate.getText().toString());
         intent.putExtra(getResources().getString(R.string.endTime), tvEndTime.getText().toString());
         intent.putExtra(getResources().getString(R.string.latitude), etLatitude.getText().toString());
         intent.putExtra(getResources().getString(R.string.longitude), etLongitude.getText().toString());
         intent.putExtra(getResources().getString(R.string.className),getResources().getString(R.string.addMeeting));
+        intent.putExtra(getResources().getString(R.string.current), currentDate);
         startActivity(intent);
     }
 
@@ -189,7 +189,6 @@ public class AddMeetingActivity extends AppCompatActivity {
         intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
         intent.putExtra(getResources().getString(R.string.invite), invitedFriends);
         intent.putExtra(getResources().getString(R.string.title), etMeetingTitle.getText().toString());
-        intent.putExtra(getResources().getString(R.string.startDate), tvStartDate.getText().toString());
         intent.putExtra(getResources().getString(R.string.startTime), tvStartTime.getText().toString());
         intent.putExtra(getResources().getString(R.string.endDate), tvEndDate.getText().toString());
         intent.putExtra(getResources().getString(R.string.endTime), tvEndTime.getText().toString());
@@ -221,16 +220,6 @@ public class AddMeetingActivity extends AppCompatActivity {
         if(title != null)
         {
             setTitle(title);
-        }
-        if(startDate != null)
-        {
-            String[] dateSplit = startDate.split("-");
-            setStartDate(Integer.parseInt(dateSplit[0]), Integer.parseInt(dateSplit[1])-1, Integer.parseInt(dateSplit[2]));
-        }
-        if(startTime != null)
-        {
-            String[] timeSplit = startTime.split(":");
-            setStartTime(Integer.parseInt(timeSplit[0]), Integer.parseInt(timeSplit[1]));
         }
         if(endDate != null)
         {

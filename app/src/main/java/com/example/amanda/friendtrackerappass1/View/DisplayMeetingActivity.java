@@ -3,6 +3,7 @@ package com.example.amanda.friendtrackerappass1.View;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,7 @@ public class DisplayMeetingActivity extends AppCompatActivity {
     private FriendManager friendManager;
     private ArrayList<Meeting> meetingList;
     private String[] menuItems;
+    private String LOG_TAG = this.getClass().getName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,8 @@ public class DisplayMeetingActivity extends AppCompatActivity {
         {
             Intent intent = new Intent(this, EditMeetingActivity.class);
             intent.putExtra(getResources().getString(R.string.name), adapter.getItem(listPos).getTitle());
-            intent.putExtra(getResources().getString(R.string.startDate), adapter.getItem(listPos).getStartDate());
+            intent.putExtra(getResources().getString(R.string.startTime), adapter.getItem(listPos).getStartDate());
+            Log.i(LOG_TAG, adapter.getItem(listPos).getStartDate());
             intent.putExtra(getResources().getString(R.string.endDate), adapter.getItem(listPos).getEndDate());
             intent.putExtra(getResources().getString(R.string.location), adapter.getItem(listPos).getLocation());
             intent.putExtra(getResources().getString(R.string.id), adapter.getItem(listPos).getID());

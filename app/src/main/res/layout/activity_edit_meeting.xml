@@ -48,20 +48,13 @@
                 android:ems="10"
                 android:inputType="textPersonName" />
 
-            <Button
-                android:id="@+id/btStartDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1.52"
-                android:text="@string/startDate" />
-
             <TextView
                 android:id="@+id/tvStartDate"
                 android:layout_width="301dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="0.84"
                 android:ems="10"
-                android:layout_weight="0.84" />
+                android:text="@string/startDate" />
 
             <TextView
                 android:id="@+id/tvStartTime"

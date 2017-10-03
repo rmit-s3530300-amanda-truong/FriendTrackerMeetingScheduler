@@ -32,7 +32,6 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
     private EditMeetingActivity activity;
     private FriendManager friendManager;
     private String title;
-    private String startDate;
     private String startTime;
     private String endDate;
     private String endTime;
@@ -40,14 +39,10 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
     private String lon;
     private ArrayList<Friend> invitedFriends;
     private ArrayList<Friend> friendList;
-    private TimePickerDialog timePickerDialog;
     private TimePickerDialog endtimePickerDialog;
-    private DatePickerDialog datePickerDialog;
     private DatePickerDialog endDatePicker;
     private MeetingManager meetingManager;
-    private boolean afterCheck;
     private boolean dateCheck;
-    private int startYear, startMonth, startDay, startHour, startMinute;
     private int startYearFinal, startMonthFinal, startDayFinal, startHourFinal, startMinuteFinal;
     private int endYear, endMonth, endDay, endHour, endMinute;
     private int endYearFinal, endMonthFinal, endDayFinal, endHourFinal, endMinuteFinal;
@@ -64,22 +59,12 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
     public void onClick(View view) {
         int buttonClicked = view.getId();
 
-        if(buttonClicked == R.id.btStartDate) {
-            Calendar c = Calendar.getInstance();
-            startYear = c.get(Calendar.YEAR);
-            startMonth = c.get(Calendar.MONTH);
-            startDay = c.get(Calendar.DAY_OF_MONTH);
-            afterCheck = false;
-            datePickerDialog = new DatePickerDialog(activity, this, startYear, startMonth, startDay);
-            datePickerDialog.show();
-        }
-        else if(buttonClicked == R.id.btEndDate)
+        if(buttonClicked == R.id.btEndDate)
         {
             Calendar c = Calendar.getInstance();
             endYear = c.get(Calendar.YEAR);
             endMonth = c.get(Calendar.MONTH);
             endDay = c.get(Calendar.DAY_OF_MONTH);
-            afterCheck = true;
             endDatePicker= new DatePickerDialog(activity, this, endYear, endMonth, endDay);
             endDatePicker.show();
         }
@@ -93,14 +78,13 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
         }
         else if(buttonClicked == R.id.btSave)
         {
-            startDate = activity.getStartDate();
-            String[] startDateSplit = startDate.split("-");
-            startYearFinal = Integer.parseInt(startDateSplit[2]);
-            startMonthFinal = Integer.parseInt(startDateSplit[1]);
-            startDayFinal = Integer.parseInt(startDateSplit[0]);
-
             startTime = activity.getStartTime();
-            String[] startTimeSplit = startTime.split(":");
+            String[] startDateSplit = startTime.split(" ");
+            startYearFinal = Integer.parseInt(startDateSplit[5]);
+            startMonthFinal = getMonthCompare(startDateSplit[1]) + 1;
+            startDayFinal = Integer.parseInt(startDateSplit[2]);
+
+            String[] startTimeSplit = startDateSplit[3].split(":");
             startHourFinal = Integer.parseInt(startTimeSplit[0]);
             startMinuteFinal = Integer.parseInt(startTimeSplit[1]);
 
@@ -221,48 +205,24 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        if(!afterCheck)
-        {
-            startYearFinal = i;
-            startMonthFinal = i1+1;
-            startDayFinal = i2;
-            activity.setStartDate(startDayFinal, startMonthFinal, startYearFinal);
-            Calendar c = Calendar.getInstance();
-            startHour = c.get(Calendar.HOUR_OF_DAY);
-            startMinute = c.get(Calendar.MINUTE);
+        endYearFinal = i;
+        endMonthFinal = i1+1;
+        endDayFinal = i2;
+        activity.setEndDate(endDayFinal, endMonthFinal, endYearFinal);
+        Calendar c = Calendar.getInstance();
+        endHour = c.get(Calendar.HOUR_OF_DAY);
+        endMinute = c.get(Calendar.MINUTE);
 
-            timePickerDialog = new TimePickerDialog(activity, this, startHour, startMinute, DateFormat.is24HourFormat(activity));
-            timePickerDialog.show();
-        }
-        else
-        {
-            endYearFinal = i;
-            endMonthFinal = i1+1;
-            endDayFinal = i2;
-            activity.setEndDate(endDayFinal, endMonthFinal, endYearFinal);
-            Calendar c = Calendar.getInstance();
-            endHour = c.get(Calendar.HOUR_OF_DAY);
-            endMinute = c.get(Calendar.MINUTE);
+        endtimePickerDialog = new TimePickerDialog(activity, this, endHour, endMinute, DateFormat.is24HourFormat(activity));
+        endtimePickerDialog.show();
 
-            endtimePickerDialog = new TimePickerDialog(activity, this, endHour, endMinute, DateFormat.is24HourFormat(activity));
-            endtimePickerDialog.show();
-        }
     }
 
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-        if(!afterCheck)
-        {
-            startHourFinal = i;
-            startMinuteFinal = i1;
-            activity.setStartTime(startHourFinal, startMinuteFinal);
-        }
-        else
-        {
-            endHourFinal = i;
-            endMinuteFinal = i1;
-            activity.setEndTime(endHourFinal, endMinuteFinal);
-        }
+        endHourFinal = i;
+        endMinuteFinal = i1;
+        activity.setEndTime(endHourFinal, endMinuteFinal);
     }
 
     private class ConfirmController implements DialogInterface.OnClickListener {
@@ -274,5 +234,59 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
             intent.putExtra(activity.getResources().getString(R.string.className), activity.getResources().getString(R.string.edit));
             activity.startActivity(intent);
         }
+    }
+
+    public int getMonthCompare(String monthStr)
+    {
+        int newMonth = 0;
+        if(monthStr.equals(activity.getResources().getString(R.string.jan)))
+        {
+            newMonth = 1;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.feb)))
+        {
+            newMonth = 2;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.mar)))
+        {
+            newMonth = 3;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.apr)))
+        {
+            newMonth = 4;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.may)))
+        {
+            newMonth = 5;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.jun)))
+        {
+            newMonth = 6;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.jul)))
+        {
+            newMonth = 7;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.aug)))
+        {
+            newMonth = 8;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.sep)))
+        {
+            newMonth = 9;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.oct)))
+        {
+            newMonth = 10;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.nov)))
+        {
+            newMonth = 11;
+        }
+        else if(monthStr.equals(activity.getResources().getString(R.string.dec)))
+        {
+            newMonth = 12;
+        }
+        return newMonth;
     }
 }

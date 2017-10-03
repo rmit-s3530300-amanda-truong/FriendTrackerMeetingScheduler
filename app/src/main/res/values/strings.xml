@@ -31,12 +31,12 @@
     <string name="options">Options</string>
     <string name="home">Home</string>
     <string name="title">Enter the title for this meeting</string>
-    <string name="startDate">Enter Start date</string>
+    <string name="startDate">Current Date and Time:</string>
     <string name="startTime">Start Time</string>
     <string name="endDate">Enter End date</string>
     <string name="endTime">End Time</string>
-    <string name="latitude">Enter the location LATITUDE for this meeting</string>
-    <string name="longitude">Enter the location LONGITUDE for this meeting</string>
+    <string name="latitude">Meeting LATITUDE:</string>
+    <string name="longitude">Meeting LONGITUDE:</string>
     <string name="invite">Invite Friends</string>
     <string name="inviteFriend">Select the friend you want to add to this meeting</string>
     <string name="invalid">Invalid</string>
@@ -74,4 +74,7 @@
     <string name="invLat">Lat invite</string>
     <string name="invLon">Lon invite</string>
     <string name="extra">Extra</string>
+    <string name="current">Current Date</string>
+    <string name="invalidLocation">No Friends were found in at this time, please select another
+        friend or try again later</string>
 </resources>
