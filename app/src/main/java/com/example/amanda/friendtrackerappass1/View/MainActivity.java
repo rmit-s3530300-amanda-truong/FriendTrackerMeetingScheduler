@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity{
         Log.i(LOG_TAG, "onCreate()");
 
         db = new DBHandler(this);
-        db.clearFriendTable();
-        db.clearMeetingTable();
+//        db.clearFriendTable();
+        //db.clearMeetingTable();
 
         Button bAddContact = (Button) findViewById(R.id.bAddContact);
         Button bDisContact = (Button) findViewById(R.id.btDisplayContact);
@@ -68,24 +68,24 @@ public class MainActivity extends AppCompatActivity{
             meetingManager = new MeetingManager();
         }
 
-//        if(friendManager.getFriendList().size() == 0)
-//        {
-//            ArrayList<Friend> friendList = db.getAllFriends();
-//            if(friendList.size() > 0)
-//            {
-//                friendManager.setFriendList(friendList);
-//                Log.i(LOG_TAG, "friendList set");
-//            }
-//        }
-//        if(meetingManager.getList().size() == 0)
-//        {
-//            ArrayList<Meeting> meetingList = db.getAllMeetings();
-//            if(meetingList.size() > 0)
-//            {
-//                meetingManager.setList(meetingList);
-//                Log.i(LOG_TAG, "meetingList set");
-//            }
-//        }
+        if(friendManager.getFriendList().size() == 0)
+        {
+            ArrayList<Friend> friendList = db.getAllFriends();
+            if(friendList.size() > 0)
+            {
+                friendManager.setFriendList(friendList);
+                Log.i(LOG_TAG, "friendList set");
+            }
+        }
+        if(meetingManager.getList().size() == 0)
+        {
+            ArrayList<Meeting> meetingList = db.getAllMeetings();
+            if(meetingList.size() > 0)
+            {
+                meetingManager.setList(meetingList);
+                Log.i(LOG_TAG, "meetingList set");
+            }
+        }
 
         bAddContact.setOnClickListener(controller);
         bDisContact.setOnClickListener(new DisContactMainController());
@@ -126,6 +126,11 @@ public class MainActivity extends AppCompatActivity{
     protected void onDestroy() {
         Log.i(LOG_TAG, "onDestroy()");
         super.onDestroy();
+        Intent i = getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage( getBaseContext().getPackageName() );
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        finish();
+        startActivity(i);
     }
 
     @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

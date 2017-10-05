@@ -15,10 +15,13 @@ import android.widget.TextView;
 
 import com.example.amanda.friendtrackerappass1.Controller.FriendListController;
 import com.example.amanda.friendtrackerappass1.Model.DBHandler;
+import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
 import com.example.amanda.friendtrackerappass1.ViewModel.FriendListAdapter;
+
+import java.util.ArrayList;
 
 public class DisplayContactActivity extends AppCompatActivity {
 
@@ -53,8 +56,17 @@ public class DisplayContactActivity extends AppCompatActivity {
             meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
             callingClass = contactInfo.getString(getResources().getString(R.string.className));
         }
-        DBHandler dbHandler = new DBHandler(this);
-        friendListController = new FriendListController(this, friendManager, dbHandler);
+        DBHandler db = new DBHandler(this);
+//        if(friendManager.getFriendList().size() == 0)
+//        {
+//            ArrayList<Friend> friendList = db.getAllFriends();
+//            if(friendList.size() > 0)
+//            {
+//                friendManager.setFriendList(friendList);
+//                Log.i(LOG_TAG, "friendList set");
+//            }
+//        }
+        friendListController = new FriendListController(this, friendManager, db);
         if(callingClass.equals(getResources().getString(R.string.main)))
         {
             friendListController.addContact(name, email);
