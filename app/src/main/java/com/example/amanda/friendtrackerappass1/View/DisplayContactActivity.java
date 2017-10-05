@@ -57,15 +57,7 @@ public class DisplayContactActivity extends AppCompatActivity {
             callingClass = contactInfo.getString(getResources().getString(R.string.className));
         }
         DBHandler db = new DBHandler(this);
-//        if(friendManager.getFriendList().size() == 0)
-//        {
-//            ArrayList<Friend> friendList = db.getAllFriends();
-//            if(friendList.size() > 0)
-//            {
-//                friendManager.setFriendList(friendList);
-//                Log.i(LOG_TAG, "friendList set");
-//            }
-//        }
+
         friendListController = new FriendListController(this, friendManager, db);
         if(callingClass.equals(getResources().getString(R.string.main)))
         {
@@ -113,7 +105,7 @@ public class DisplayContactActivity extends AppCompatActivity {
         }
         else if(menuItemName.equals(menuItems[1]))
         {
-            friendManager.removeFriend(adapter.getItem(listPos));
+            friendListController.removeFriend(adapter.getItem(listPos));
             adapter.notifyDataSetChanged();
         }
         return true;

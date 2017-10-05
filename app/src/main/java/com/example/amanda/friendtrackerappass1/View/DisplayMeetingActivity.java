@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.amanda.friendtrackerappass1.Controller.MeetingController;
+import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.Model.Meeting;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
@@ -25,6 +27,8 @@ public class DisplayMeetingActivity extends AppCompatActivity {
     private MeetingManager meetingManager;
     private FriendManager friendManager;
     private ArrayList<Meeting> meetingList;
+    private MeetingController meetingController;
+    private DBHandler db;
     private String[] menuItems;
     private String LOG_TAG = this.getClass().getName();
 
@@ -32,13 +36,14 @@ public class DisplayMeetingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_meeting);
-
+        db = new DBHandler(this);
         Bundle contactInfo = getIntent().getExtras();
         if(contactInfo != null)
         {
             friendManager = (FriendManager) contactInfo.getSerializable(getResources().getString(R.string.friendManager));
             meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
         }
+        meetingController = new MeetingController(null, this, friendManager, meetingManager, db);
         meetingList = meetingManager.getList();
         adapter = new MeetingListAdapter(this, R.layout.activity_list_view, meetingList);
 
@@ -85,7 +90,7 @@ public class DisplayMeetingActivity extends AppCompatActivity {
         }
         else if(menuItemName.equals(menuItems[1]))
         {
-            meetingManager.unscheduleMeeting(adapter.getItem(listPos));
+            meetingController.removeMeeting(adapter.getItem(listPos));
             adapter.notifyDataSetChanged();
         }
         return true;

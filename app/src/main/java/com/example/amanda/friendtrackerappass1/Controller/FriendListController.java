@@ -120,4 +120,12 @@ public class FriendListController {
         Log.i(LOG_TAG, table);
         db.close();
     }
+
+    public void removeFriend(Friend friend)
+    {
+        friendManager.removeFriend(friend);
+        db.removeFriend(friend);
+        String table = db.getTableAsString("friend");
+        Log.i(LOG_TAG, table);
+    }
 }

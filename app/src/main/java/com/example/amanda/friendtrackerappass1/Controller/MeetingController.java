@@ -17,6 +17,7 @@ import com.example.amanda.friendtrackerappass1.Model.Meeting;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
 import com.example.amanda.friendtrackerappass1.View.AddMeetingActivity;
+import com.example.amanda.friendtrackerappass1.View.DisplayMeetingActivity;
 import com.example.amanda.friendtrackerappass1.View.EditMeetingActivity;
 
 import android.text.format.DateFormat;
@@ -35,6 +36,7 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
 
     private String uuid;
     private AddMeetingActivity activity;
+    private DisplayMeetingActivity displayActivity;
     private FriendManager friendManager;
     private String title;
     private String startTime;
@@ -54,8 +56,9 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
     private String LOG_TAG = this.getClass().getName();
     private DBHandler db;
 
-    public MeetingController(Activity activity, FriendManager friendManager, MeetingManager meetingManager, DBHandler db){
+    public MeetingController(Activity activity, Activity displayActivity, FriendManager friendManager, MeetingManager meetingManager, DBHandler db){
         this.activity = (AddMeetingActivity) activity;
+        this.displayActivity = (DisplayMeetingActivity) displayActivity;
         this.meetingManager = meetingManager;
         this.friendManager = friendManager;
         this.db = db;
@@ -263,6 +266,14 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
             newMonth = 12;
         }
         return newMonth;
+    }
+
+    public void removeMeeting(Meeting meeting)
+    {
+        meetingManager.unscheduleMeeting(meeting);
+        db.removeMeeting(meeting);
+        String table = db.getTableAsString("meeting");
+        Log.i(LOG_TAG, table);
     }
 
     @Override

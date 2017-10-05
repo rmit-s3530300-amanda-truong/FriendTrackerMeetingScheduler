@@ -261,6 +261,20 @@ public class DBHandler extends SQLiteOpenHelper{
         return true;
     }
 
+    public boolean removeFriend(Friend friend)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_FRIEND, KEY_ID+"='"+friend.getID()+"'", null);
+        return true;
+    }
+
+    public boolean removeMeeting(Meeting meeting)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_MEETING, KEY_ID+"='"+meeting.getID()+"'", null);
+        return true;
+    }
+
     public String getTableAsString(String tableName) {
         SQLiteDatabase db = this.getReadableDatabase();
         String tableString = String.format("Table %s:\n", tableName);

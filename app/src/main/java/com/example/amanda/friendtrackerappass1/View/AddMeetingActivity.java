@@ -80,7 +80,7 @@ public class AddMeetingActivity extends AppCompatActivity {
         initialiseValues();
         DBHandler db = new DBHandler(this);
 
-        meetingController = new MeetingController(this,friendManager, meetingManager, db);
+        meetingController = new MeetingController(this, null, friendManager, meetingManager, db);
 
         btEndDate.setOnClickListener(meetingController);
         Button btInvite = (Button) findViewById(R.id.btMeetingInvite);
