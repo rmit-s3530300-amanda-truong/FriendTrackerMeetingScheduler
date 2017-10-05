@@ -2,6 +2,7 @@ package com.example.amanda.friendtrackerappass1.View;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,12 +11,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.amanda.friendtrackerappass1.Controller.MainMenuController;
+import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
+import com.example.amanda.friendtrackerappass1.Model.Meeting;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity{
     private MainMenuController controller;
     private FriendManager friendManager;
     private MeetingManager meetingManager;
+    private DBHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,10 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         Log.i(LOG_TAG, "onCreate()");
+
+        db = new DBHandler(this);
+        db.clearFriendTable();
+        db.clearMeetingTable();
 
         Button bAddContact = (Button) findViewById(R.id.bAddContact);
         Button bDisContact = (Button) findViewById(R.id.btDisplayContact);
@@ -58,6 +67,25 @@ public class MainActivity extends AppCompatActivity{
             friendManager = new FriendManager();
             meetingManager = new MeetingManager();
         }
+
+//        if(friendManager.getFriendList().size() == 0)
+//        {
+//            ArrayList<Friend> friendList = db.getAllFriends();
+//            if(friendList.size() > 0)
+//            {
+//                friendManager.setFriendList(friendList);
+//                Log.i(LOG_TAG, "friendList set");
+//            }
+//        }
+//        if(meetingManager.getList().size() == 0)
+//        {
+//            ArrayList<Meeting> meetingList = db.getAllMeetings();
+//            if(meetingList.size() > 0)
+//            {
+//                meetingManager.setList(meetingList);
+//                Log.i(LOG_TAG, "meetingList set");
+//            }
+//        }
 
         bAddContact.setOnClickListener(controller);
         bDisContact.setOnClickListener(new DisContactMainController());

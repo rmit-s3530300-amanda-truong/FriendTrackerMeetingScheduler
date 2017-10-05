@@ -153,8 +153,6 @@ public class InviteFriendActivity extends Activity {
         dummyLocationService.logAll();
             matched = dummyLocationService
                     .getFriendLocationsForTime(currentDate, 2, 0);
-            Log.i(LOG_TAG, "Matched Query:");
-            //dummyLocationService.log(matched);
         if(matched.size() == 0)
         {
             Toast toast = Toast.makeText(this.getApplicationContext(), this.getResources().getString(R.string.invalidLocation), Toast.LENGTH_LONG);

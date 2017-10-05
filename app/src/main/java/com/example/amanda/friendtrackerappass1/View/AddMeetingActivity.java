@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.amanda.friendtrackerappass1.Controller.MeetingController;
+import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
@@ -44,7 +45,6 @@ public class AddMeetingActivity extends AppCompatActivity {
     private String lon;
     private Date currentDate;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +78,9 @@ public class AddMeetingActivity extends AppCompatActivity {
         }
 
         initialiseValues();
+        DBHandler db = new DBHandler(this);
 
-        meetingController = new MeetingController(this,friendManager, meetingManager);
+        meetingController = new MeetingController(this,friendManager, meetingManager, db);
 
         btEndDate.setOnClickListener(meetingController);
         Button btInvite = (Button) findViewById(R.id.btMeetingInvite);

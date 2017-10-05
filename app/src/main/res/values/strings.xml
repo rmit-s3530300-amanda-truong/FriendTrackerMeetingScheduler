@@ -77,4 +77,5 @@
     <string name="current">Current Date</string>
     <string name="invalidLocation">No Friends were found in at this time, please select another
         friend or try again later</string>
+    <string name="database">Database</string>
 </resources>

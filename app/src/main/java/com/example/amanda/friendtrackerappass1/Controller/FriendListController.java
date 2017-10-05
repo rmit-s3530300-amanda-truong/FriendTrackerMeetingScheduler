@@ -1,9 +1,11 @@
 package com.example.amanda.friendtrackerappass1.Controller;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.DummyLocationService;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
@@ -29,9 +31,10 @@ public class FriendListController {
     private FriendListAdapter adapter;
     private String uuid;
     private String LOG_TAG = this.getClass().getName();
+    private DBHandler db;
     private DummyLocationService dummyLocationService;
 
-    public FriendListController(Activity activity, FriendManager friendManager)
+    public FriendListController(Activity activity, FriendManager friendManager, DBHandler db)
     {
         this.friendManager = friendManager;
         this.activity = activity;
@@ -39,6 +42,7 @@ public class FriendListController {
         adapter = new FriendListAdapter(activity, R.layout.activity_list_view, friendList);
         dummyLocationService = DummyLocationService.getSingletonInstance(activity);
         dummyLocationService.logAll();
+        this.db = db;
     }
 
     public FriendListAdapter getAdapter()
@@ -87,12 +91,12 @@ public class FriendListController {
             }
             if(!check)
             {
-                friendManager.addFriend(friend);
+                addFriend(friend);
             }
         }
         else
         {
-            friendManager.addFriend(friend);
+            addFriend(friend);
         }
 
     }
@@ -100,5 +104,20 @@ public class FriendListController {
     public String getID()
     {
         return uuid;
+    }
+
+    public void addFriend(Friend friend)
+    {
+        friendManager.addFriend(friend);
+        db.createFriend(friend);
+        ArrayList<Friend> friendListDB = db.getAllFriends();
+        for(Friend f: friendListDB)
+        {
+            Log.i(LOG_TAG, f.getID());
+            Log.i(LOG_TAG, f.getName());
+        }
+        String table = db.getTableAsString("friend");
+        Log.i(LOG_TAG, table);
+        db.close();
     }
 }

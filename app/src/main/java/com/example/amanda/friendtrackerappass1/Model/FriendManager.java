@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -51,6 +52,11 @@ public class FriendManager implements Serializable{
             }
         }
         return null;
+    }
+
+    public void setFriendList(ArrayList<Friend> list)
+    {
+        friendList = list;
     }
 
     public ArrayList<Friend> getFriendList()

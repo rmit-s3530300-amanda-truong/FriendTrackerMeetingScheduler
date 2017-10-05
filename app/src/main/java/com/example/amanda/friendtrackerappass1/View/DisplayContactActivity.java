@@ -1,6 +1,7 @@
 package com.example.amanda.friendtrackerappass1.View;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.amanda.friendtrackerappass1.Controller.FriendListController;
+import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
@@ -51,7 +53,8 @@ public class DisplayContactActivity extends AppCompatActivity {
             meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
             callingClass = contactInfo.getString(getResources().getString(R.string.className));
         }
-        friendListController = new FriendListController(this, friendManager);
+        DBHandler dbHandler = new DBHandler(this);
+        friendListController = new FriendListController(this, friendManager, dbHandler);
         if(callingClass.equals(getResources().getString(R.string.main)))
         {
             friendListController.addContact(name, email);

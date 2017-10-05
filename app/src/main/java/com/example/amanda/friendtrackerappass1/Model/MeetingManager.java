@@ -33,6 +33,11 @@ public class MeetingManager implements Serializable{
         return meetingList;
     }
 
+    public void setList(ArrayList<Meeting> list)
+    {
+        meetingList = list;
+    }
+
     public Meeting findMeeting(String id)
     {
         for(Meeting m: meetingList)

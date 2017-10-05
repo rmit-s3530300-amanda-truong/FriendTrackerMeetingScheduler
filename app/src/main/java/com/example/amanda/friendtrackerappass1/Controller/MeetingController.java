@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.Model.Meeting;
@@ -51,11 +52,13 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
     private int endYear, endMonth, endDay, endHour, endMinute;
     private int endYearFinal, endMonthFinal, endDayFinal, endHourFinal, endMinuteFinal;
     private String LOG_TAG = this.getClass().getName();
+    private DBHandler db;
 
-    public MeetingController(Activity activity, FriendManager friendManager, MeetingManager meetingManager){
+    public MeetingController(Activity activity, FriendManager friendManager, MeetingManager meetingManager, DBHandler db){
         this.activity = (AddMeetingActivity) activity;
         this.meetingManager = meetingManager;
         this.friendManager = friendManager;
+        this.db = db;
     }
 
     public void generateID()
@@ -120,6 +123,20 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
                 Meeting meeting = new Meeting(uuid, title, startTime, endDate + " " + endTime,
                         invitedFriends, lat+":"+lon);
                 meetingManager.scheduleMeeting(meeting);
+                db.createMeeting(meeting);
+                String table = db.getTableAsString("meeting");
+                Log.i(LOG_TAG, table);
+                ArrayList<Meeting> meetingList = db.getAllMeetings();
+                for(Meeting m: meetingList)
+                {
+                    Log.i(LOG_TAG, m.getID());
+                    Log.i(LOG_TAG, m.getTitle());
+                    Log.i(LOG_TAG, m.getStartDate());
+                    Log.i(LOG_TAG, m.getEndDate());
+                    Log.i(LOG_TAG, m.getInvitedFriends().toString());
+                    Log.i(LOG_TAG, m.getLocation());
+                }
+                db.close();
                 activity.goToMeetingList();
             }
             else
@@ -135,11 +152,6 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
 
     public boolean validateDateTime()
     {
-        Log.i(LOG_TAG, startYearFinal + ":" + endYearFinal);
-        Log.i(LOG_TAG, startMonthFinal + ":" + endMonthFinal);
-        Log.i(LOG_TAG, startDayFinal + ":" + endDayFinal);
-        Log.i(LOG_TAG, startHourFinal + ":" + endHourFinal);
-        Log.i(LOG_TAG, startMinuteFinal + ":" + endMinuteFinal);
         if(startYearFinal < endYearFinal)
         {
             dateCheck = true;

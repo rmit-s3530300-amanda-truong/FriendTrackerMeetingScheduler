@@ -12,8 +12,10 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
+import com.example.amanda.friendtrackerappass1.Model.Meeting;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
 import com.example.amanda.friendtrackerappass1.View.DisplayMeetingActivity;
@@ -28,7 +30,6 @@ import java.util.Calendar;
 
 public class EditMeetingController implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    private String uuid;
     private EditMeetingActivity activity;
     private FriendManager friendManager;
     private String title;
@@ -37,8 +38,6 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
     private String endTime;
     private String lat;
     private String lon;
-    private ArrayList<Friend> invitedFriends;
-    private ArrayList<Friend> friendList;
     private TimePickerDialog endtimePickerDialog;
     private DatePickerDialog endDatePicker;
     private MeetingManager meetingManager;
@@ -48,11 +47,13 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
     private int endYearFinal, endMonthFinal, endDayFinal, endHourFinal, endMinuteFinal;
     private String LOG_TAG = this.getClass().getName();
     private boolean saved = false;
+    private DBHandler db;
 
-    public EditMeetingController(Activity activity, FriendManager friendManager, MeetingManager meetingManager){
+    public EditMeetingController(Activity activity, FriendManager friendManager, MeetingManager meetingManager, DBHandler db){
         this.activity = (EditMeetingActivity) activity;
         this.meetingManager = meetingManager;
         this.friendManager = friendManager;
+        this.db = db;
     }
 
     @Override
@@ -101,7 +102,8 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
             boolean check = validateDateTime();
             if(check)
             {
-                activity.saveValues();
+                ArrayList<String> values = activity.saveValues();
+                saveMeeting(values);
                 AlertDialog.Builder alert = new AlertDialog.Builder(activity);
                 alert.setTitle(activity.getResources().getString(R.string.savedInfo));
                 alert.setMessage(activity.getResources().getString(R.string.savedMessaged));
@@ -288,5 +290,32 @@ public class EditMeetingController implements View.OnClickListener, DatePickerDi
             newMonth = 12;
         }
         return newMonth;
+    }
+
+    public void saveMeeting(ArrayList<String> meetingInfo)
+    {
+        Meeting meeting = meetingManager.findMeeting(meetingInfo.get(0));
+        meeting.editTitle(meetingInfo.get(1));
+        meeting.editStartDate(meetingInfo.get(2));
+        meeting.editEndDate(meetingInfo.get(3));
+        String[] locationSplit = meetingInfo.get(4).split(":");
+        meeting.editLocation(locationSplit[0], locationSplit[1]);
+        ArrayList<Friend> invitedFriends = activity.getInvitedFriends();
+        meeting.editInvitedFriends(invitedFriends);
+
+        db.updateMeeting(meeting);
+        String table = db.getTableAsString("meeting");
+        Log.i(LOG_TAG, table);
+        ArrayList<Meeting> meetingList = db.getAllMeetings();
+        for(Meeting m: meetingList)
+        {
+            Log.i(LOG_TAG, m.getID());
+            Log.i(LOG_TAG, m.getTitle());
+            Log.i(LOG_TAG, m.getStartDate());
+            Log.i(LOG_TAG, m.getEndDate());
+            Log.i(LOG_TAG, m.getInvitedFriends().toString());
+            Log.i(LOG_TAG, m.getLocation());
+        }
+        db.close();
     }
 }

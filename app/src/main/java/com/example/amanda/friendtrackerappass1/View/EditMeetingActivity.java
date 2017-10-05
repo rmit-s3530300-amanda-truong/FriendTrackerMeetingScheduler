@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.amanda.friendtrackerappass1.Controller.EditMeetingController;
+import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.Model.Meeting;
@@ -28,7 +29,6 @@ public class EditMeetingActivity extends AppCompatActivity {
     private String title;
     private String startDate;
     private String startTime;
-    private String endTime;
     private String id;
     private String endDate;
     private String invTitle;
@@ -53,8 +53,8 @@ public class EditMeetingActivity extends AppCompatActivity {
     private Button btBack;
     private Button btRemoveInvited;
     private String className;
-    private boolean saved = false;
     private EditMeetingController meetingController;
+    private DBHandler db;
     private String LOG_TAG = this.getClass().getName();
 
     @Override
@@ -100,8 +100,8 @@ public class EditMeetingActivity extends AppCompatActivity {
             meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
             className = (String) contactInfo.getString(getResources().getString(R.string.className));
         }
-
-        meetingController = new EditMeetingController(this, friendManager, meetingManager);
+        db = new DBHandler(this);
+        meetingController = new EditMeetingController(this, friendManager, meetingManager, db);
         if(className.equals(getResources().getString(R.string.invite)))
         {
             initialiseValues();
@@ -254,13 +254,19 @@ public class EditMeetingActivity extends AppCompatActivity {
         return tvEndTime.getText().toString();
     }
 
-    public void saveValues()
+    public ArrayList<String> saveValues()
     {
-        Meeting meeting = meetingManager.findMeeting(id);
-        meeting.editTitle(etMeetingTitle.getText().toString());
-        meeting.editStartDate(tvStartTime.getText().toString());
-        meeting.editEndDate(tvEndDate.getText().toString() + " " + tvEndTime.getText().toString());
-        meeting.editLocation(etLatitude.getText().toString(), etLongitude.getText().toString());
-        meeting.editInvitedFriends(invitedFriends);
+        ArrayList<String> sendValues = new ArrayList<String>();
+        sendValues.add(id);
+        sendValues.add(etMeetingTitle.getText().toString());
+        sendValues.add(tvStartTime.getText().toString());
+        sendValues.add(tvEndDate.getText().toString() + " " + tvEndTime.getText().toString());
+        sendValues.add(etLatitude.getText().toString() +":"+ etLongitude.getText().toString());
+        return sendValues;
+    }
+
+    public ArrayList<Friend> getInvitedFriends()
+    {
+        return invitedFriends;
     }
 }
