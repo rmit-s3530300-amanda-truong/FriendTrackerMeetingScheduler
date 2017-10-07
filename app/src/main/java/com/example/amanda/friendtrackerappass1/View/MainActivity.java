@@ -1,8 +1,10 @@
 package com.example.amanda.friendtrackerappass1.View;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -10,9 +12,12 @@ import android.os.Build;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -73,6 +78,7 @@ public class MainActivity extends AppCompatActivity{
         }
 
         getLocation();
+        getContactPermission();
 
         RetrieveListsAsync asyncTask = new RetrieveListsAsync(this, friendManager, meetingManager);
         asyncTask.execute();
@@ -80,6 +86,27 @@ public class MainActivity extends AppCompatActivity{
         bAddContact.setOnClickListener(controller);
         bDisContact.setOnClickListener(new DisContactMainController());
         bDisMeeting.setOnClickListener(new DisMeetingMainController());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == R.id.action_settings)
+        {
+            Intent intent = new Intent(this, SettingsPop.class);
+            intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+            intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            startActivity(intent);
+        }
+        return true;
     }
 
     public void getLocation()
@@ -90,23 +117,57 @@ public class MainActivity extends AppCompatActivity{
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET}
-                ,10);
+                ,getResources().getInteger(R.integer.REQUEST_LOCATION_PERMISSION));
             }
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationHandler);
     }
 
+    public void getContactPermission()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
+            {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.READ_CONTACTS))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Contacts access needed");
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setMessage("Allow FriendTracker to access your contacts?");
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            requestPermissions(
+                                    new String[]
+                                            {Manifest.permission.READ_CONTACTS}
+                                    , getResources().getInteger(R.integer.REQUEST_CONTACT_PERMISSION));
+                        }
+                    });
+                    builder.show();
+                }
+                else
+                {
+                    ActivityCompat.requestPermissions(this,
+                            new String[]{Manifest.permission.READ_CONTACTS},
+                            getResources().getInteger(R.integer.REQUEST_CONTACT_PERMISSION));
+                }
+            }
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults)
     {
-         switch(requestCode)
+         if(requestCode == getResources().getInteger(R.integer.REQUEST_CONTACT_PERMISSION))
          {
-             case 10:
-                 getLocation();
-                 break;
-             default:
-                 break;
+             getContactPermission();
+         }
+         else if(requestCode == getResources().getInteger(R.integer.REQUEST_LOCATION_PERMISSION))
+         {
+             getLocation();
          }
     }
 

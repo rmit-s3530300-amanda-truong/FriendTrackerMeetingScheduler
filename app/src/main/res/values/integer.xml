@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="PICK_CONTACTS">100</integer>
+    <integer name="REQUEST_CONTACT_PERMISSION">99</integer>
+    <integer name="REQUEST_LOCATION_PERMISSION">10</integer>
 </resources>

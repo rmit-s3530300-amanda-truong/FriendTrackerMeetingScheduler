@@ -43,6 +43,7 @@
     <string name="invBefore">Invalid: Start Date and Time must be earlier than End Date and Time</string>
     <string name="invAfter">Invalid: End Date and Time must be later than Start Date and Time</string>
     <string name="okay">OK</string>
+    <string name="settings">settings</string>
     <string name="location">Location</string>
     <string name="warning">Warning</string>
     <string name="warningMessage">Contact List is empty, select Add A Contact to import your first contact</string>
@@ -78,4 +79,10 @@
     <string name="invalidLocation">No Friends were found in at this time, please select another
         friend or try again later</string>
     <string name="database">Database</string>
+    <string name="suggestNow">Suggest Meeting Interval:</string>
+    <string name="minute">minutes</string>
+    <string name="minutesb4">minutes before meeting</string>
+    <string name="upcomingMeetings">Notifications for upcoming meetings displayed:</string>
+    <string name="remindMe">Remind me in:</string>
+
 </resources>

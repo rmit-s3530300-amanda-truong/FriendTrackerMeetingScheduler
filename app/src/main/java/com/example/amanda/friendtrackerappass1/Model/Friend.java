@@ -82,10 +82,6 @@ public class Friend implements Serializable{
     public void setLocationInfo(ArrayList<String> info)
     {
         locationInfo = info;
-        for(String s: locationInfo)
-        {
-            Log.i(LOG_TAG, s);
-        }
     }
 
     public ArrayList<String> getLocation()
