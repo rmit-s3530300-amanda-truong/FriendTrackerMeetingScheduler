@@ -190,7 +190,6 @@ public class DBHandler extends SQLiteOpenHelper{
                     ArrayList<Friend> friendList = getAllFriends();
                     for(Friend f: friendList)
                     {
-                        Log.i(LOG_TAG, f.getID() + ":" + friendSplit[i]);
                         if(friendSplit[i].equals(f.getID()))
                         {
                             invitedFriends.add(f);

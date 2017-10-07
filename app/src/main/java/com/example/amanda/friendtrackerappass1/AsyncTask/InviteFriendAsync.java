@@ -1,13 +1,19 @@
 package com.example.amanda.friendtrackerappass1.AsyncTask;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.amanda.friendtrackerappass1.Model.DummyLocationService;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
+import com.example.amanda.friendtrackerappass1.Model.LocationHandler;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
 import com.example.amanda.friendtrackerappass1.View.InviteFriendActivity;
@@ -30,13 +36,13 @@ public class InviteFriendAsync extends AsyncTask<Friend, Void, Void> {
     private String lon;
     private String finalMid;
 
-    public InviteFriendAsync(Activity activity, FriendManager friendManager, MeetingManager meetingManager)
-    {
+    public InviteFriendAsync(Activity activity, FriendManager friendManager, MeetingManager meetingManager) {
         super();
         this.activity = (InviteFriendActivity) activity;
         this.friendManager = friendManager;
         this.meetingManager = meetingManager;
     }
+
     @Override
     protected Void doInBackground(Friend... friend) {
         boolean end = false;
@@ -100,13 +106,6 @@ public class InviteFriendAsync extends AsyncTask<Friend, Void, Void> {
         lon = location[1];
         activity.setLocation(lat, lon);
 
-//        if(activity.getInvitedFriends().size() == 1)
-//        {
-//            String[] location = findMidPoint().split(", ");
-//            lat = location[0];
-//            lon = location[1];
-
-        //}
         return null;
     }
 

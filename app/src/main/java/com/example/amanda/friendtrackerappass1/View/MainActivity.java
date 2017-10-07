@@ -1,8 +1,15 @@
 package com.example.amanda.friendtrackerappass1.View;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +22,7 @@ import com.example.amanda.friendtrackerappass1.Controller.MainMenuController;
 import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
+import com.example.amanda.friendtrackerappass1.Model.LocationHandler;
 import com.example.amanda.friendtrackerappass1.Model.Meeting;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
@@ -64,12 +72,42 @@ public class MainActivity extends AppCompatActivity{
             meetingManager = new MeetingManager();
         }
 
+        getLocation();
+
         RetrieveListsAsync asyncTask = new RetrieveListsAsync(this, friendManager, meetingManager);
         asyncTask.execute();
 
         bAddContact.setOnClickListener(controller);
         bDisContact.setOnClickListener(new DisContactMainController());
         bDisMeeting.setOnClickListener(new DisMeetingMainController());
+    }
+
+    public void getLocation()
+    {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationHandler locationHandler = new LocationHandler();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET}
+                ,10);
+            }
+            return;
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationHandler);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults)
+    {
+         switch(requestCode)
+         {
+             case 10:
+                 getLocation();
+                 break;
+             default:
+                 break;
+         }
     }
 
     @Override
