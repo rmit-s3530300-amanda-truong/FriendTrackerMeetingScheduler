@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.example.amanda.friendtrackerappass1.AsyncTask.UpdateContactAsync;
 import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
@@ -25,9 +26,6 @@ public class EditContactActivity extends AppCompatActivity {
     private String name;
     private String email;
     private String id;
-    private int year;
-    private int month;
-    private int date;
     private FriendManager friendManager;
     private boolean saved = false;
     private EditText etEditName;
@@ -124,38 +122,8 @@ public class EditContactActivity extends AppCompatActivity {
     private class SaveController implements View.OnClickListener {
         @Override
         public void onClick(View view) {
-            date = datePicker.getDayOfMonth();
-            month = datePicker.getMonth();
-            year = datePicker.getYear();
-            friend.editName(etEditName.getText().toString());
-            friend.editEmail(etEditEmail.getText().toString());
-            friend.editBirthday(date, month, year);
-            DBHandler db = new DBHandler(EditContactActivity.this);
-            db.updateFriend(friend);
-            ArrayList<Friend> friendListDB = db.getAllFriends();
-            for(Friend f: friendListDB)
-            {
-                Log.i(LOG_TAG, f.getID());
-                Log.i(LOG_TAG, f.getName());
-                Log.i(LOG_TAG, f.getEmail());
-                if(f.getBirthday()!=null)
-                {
-                    Log.i(LOG_TAG, f.getBirthday().toString());
-                }
-                else
-                {
-                    Log.i(LOG_TAG, "birthday null");
-                }
-            }
-            String table = db.getTableAsString("friend");
-            Log.i(LOG_TAG, table);
-            db.close();
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(EditContactActivity.this);
-            alert.setTitle(getResources().getString(R.string.savedInfo));
-            alert.setMessage(getResources().getString(R.string.savedMessaged));
-            alert.setPositiveButton(getResources().getString(R.string.okay), null);
-            alert.show();
+            UpdateContactAsync async = new UpdateContactAsync(EditContactActivity.this, friendManager);
+            async.execute(friend);
             saved = true;
         }
     }

@@ -15,7 +15,6 @@ import java.util.ArrayList;
 public class FriendManager implements Serializable{
 
     private ArrayList<Friend> friendList;
-    private Friend friend;
     private String LOG_TAG = this.getClass().getName();
 
     public FriendManager() {
@@ -63,5 +62,4 @@ public class FriendManager implements Serializable{
     {
         return friendList;
     }
-
 }

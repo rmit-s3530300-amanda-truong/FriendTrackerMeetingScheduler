@@ -28,7 +28,6 @@ public class DisplayMeetingActivity extends AppCompatActivity {
     private FriendManager friendManager;
     private ArrayList<Meeting> meetingList;
     private MeetingController meetingController;
-    private DBHandler db;
     private String[] menuItems;
     private String LOG_TAG = this.getClass().getName();
 
@@ -36,15 +35,15 @@ public class DisplayMeetingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_meeting);
-        db = new DBHandler(this);
         Bundle contactInfo = getIntent().getExtras();
         if(contactInfo != null)
         {
             friendManager = (FriendManager) contactInfo.getSerializable(getResources().getString(R.string.friendManager));
             meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
         }
-        meetingController = new MeetingController(null, this, friendManager, meetingManager, db);
+        meetingController = new MeetingController(null, this, friendManager, meetingManager);
         meetingList = meetingManager.getList();
+
         adapter = new MeetingListAdapter(this, R.layout.activity_list_view, meetingList);
 
         ListView lvMeetingList = (ListView) findViewById(R.id.lvMeetingList);

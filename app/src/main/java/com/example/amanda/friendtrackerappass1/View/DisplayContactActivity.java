@@ -56,9 +56,8 @@ public class DisplayContactActivity extends AppCompatActivity {
             meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
             callingClass = contactInfo.getString(getResources().getString(R.string.className));
         }
-        DBHandler db = new DBHandler(this);
 
-        friendListController = new FriendListController(this, friendManager, db);
+        friendListController = new FriendListController(this, friendManager);
         if(callingClass.equals(getResources().getString(R.string.main)))
         {
             friendListController.addContact(name, email);

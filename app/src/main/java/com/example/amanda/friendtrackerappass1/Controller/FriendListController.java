@@ -2,9 +2,12 @@ package com.example.amanda.friendtrackerappass1.Controller;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.amanda.friendtrackerappass1.AsyncTask.AddContactAsync;
+import com.example.amanda.friendtrackerappass1.AsyncTask.RemoveContactAsync;
 import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.DummyLocationService;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
@@ -31,10 +34,9 @@ public class FriendListController {
     private FriendListAdapter adapter;
     private String uuid;
     private String LOG_TAG = this.getClass().getName();
-    private DBHandler db;
     private DummyLocationService dummyLocationService;
 
-    public FriendListController(Activity activity, FriendManager friendManager, DBHandler db)
+    public FriendListController(Activity activity, FriendManager friendManager)
     {
         this.friendManager = friendManager;
         this.activity = activity;
@@ -42,7 +44,6 @@ public class FriendListController {
         adapter = new FriendListAdapter(activity, R.layout.activity_list_view, friendList);
         dummyLocationService = DummyLocationService.getSingletonInstance(activity);
         dummyLocationService.logAll();
-        this.db = db;
     }
 
     public FriendListAdapter getAdapter()
@@ -98,7 +99,6 @@ public class FriendListController {
         {
             addFriend(friend);
         }
-
     }
 
     public String getID()
@@ -108,24 +108,13 @@ public class FriendListController {
 
     public void addFriend(Friend friend)
     {
-        friendManager.addFriend(friend);
-        db.createFriend(friend);
-        ArrayList<Friend> friendListDB = db.getAllFriends();
-        for(Friend f: friendListDB)
-        {
-            Log.i(LOG_TAG, f.getID());
-            Log.i(LOG_TAG, f.getName());
-        }
-        String table = db.getTableAsString("friend");
-        Log.i(LOG_TAG, table);
-        db.close();
+        AddContactAsync async = new AddContactAsync(activity, friendManager);
+        async.execute(friend);
     }
 
     public void removeFriend(Friend friend)
     {
-        friendManager.removeFriend(friend);
-        db.removeFriend(friend);
-        String table = db.getTableAsString("friend");
-        Log.i(LOG_TAG, table);
+        RemoveContactAsync async = new RemoveContactAsync(activity, friendManager);
+        async.execute(friend);
     }
 }

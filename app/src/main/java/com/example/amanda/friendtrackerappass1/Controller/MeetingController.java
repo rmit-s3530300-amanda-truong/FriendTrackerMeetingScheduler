@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.example.amanda.friendtrackerappass1.AsyncTask.AddMeetingAsync;
+import com.example.amanda.friendtrackerappass1.AsyncTask.RemoveMeetingAsync;
 import com.example.amanda.friendtrackerappass1.Model.DBHandler;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
@@ -44,8 +46,6 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
     private String endTime;
     private String lat;
     private String lon;
-    private ArrayList<Friend> invitedFriends;
-    private ArrayList<Friend> friendList;
     private TimePickerDialog endtimePickerDialog;
     private DatePickerDialog endDatePicker;
     private MeetingManager meetingManager;
@@ -54,14 +54,12 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
     private int endYear, endMonth, endDay, endHour, endMinute;
     private int endYearFinal, endMonthFinal, endDayFinal, endHourFinal, endMinuteFinal;
     private String LOG_TAG = this.getClass().getName();
-    private DBHandler db;
 
-    public MeetingController(Activity activity, Activity displayActivity, FriendManager friendManager, MeetingManager meetingManager, DBHandler db){
+    public MeetingController(Activity activity, Activity displayActivity, FriendManager friendManager, MeetingManager meetingManager){
         this.activity = (AddMeetingActivity) activity;
         this.displayActivity = (DisplayMeetingActivity) displayActivity;
         this.meetingManager = meetingManager;
         this.friendManager = friendManager;
-        this.db = db;
     }
 
     public void generateID()
@@ -122,25 +120,9 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
             if(check)
             {
                 generateID();
-                ArrayList<Friend> invitedFriends = activity.getInvitedFriends();
-                Meeting meeting = new Meeting(uuid, title, startTime, endDate + " " + endTime,
-                        invitedFriends, lat+":"+lon);
-                meetingManager.scheduleMeeting(meeting);
-                db.createMeeting(meeting);
-                String table = db.getTableAsString("meeting");
-                Log.i(LOG_TAG, table);
-                ArrayList<Meeting> meetingList = db.getAllMeetings();
-                for(Meeting m: meetingList)
-                {
-                    Log.i(LOG_TAG, m.getID());
-                    Log.i(LOG_TAG, m.getTitle());
-                    Log.i(LOG_TAG, m.getStartDate());
-                    Log.i(LOG_TAG, m.getEndDate());
-                    Log.i(LOG_TAG, m.getInvitedFriends().toString());
-                    Log.i(LOG_TAG, m.getLocation());
-                }
-                db.close();
-                activity.goToMeetingList();
+                AddMeetingAsync async = new AddMeetingAsync(activity, friendManager, meetingManager);
+                async.execute(uuid, title, startTime, endDate + " " + endTime,
+                        lat+":"+lon);
             }
             else
             {
@@ -270,10 +252,8 @@ public class MeetingController implements View.OnClickListener, DatePickerDialog
 
     public void removeMeeting(Meeting meeting)
     {
-        meetingManager.unscheduleMeeting(meeting);
-        db.removeMeeting(meeting);
-        String table = db.getTableAsString("meeting");
-        Log.i(LOG_TAG, table);
+        RemoveMeetingAsync async = new RemoveMeetingAsync(displayActivity, friendManager, meetingManager);
+        async.execute(meeting);
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.amanda.friendtrackerappass1.AsyncTask.InviteFriendAsync;
 import com.example.amanda.friendtrackerappass1.Model.DummyLocationService;
 import com.example.amanda.friendtrackerappass1.Model.Friend;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
@@ -40,8 +41,9 @@ public class InviteFriendActivity extends Activity {
     private String lon;
     private String className;
     private String extra;
-    private boolean addCheck;
+    private boolean addCheck = true;
     private Date currentDate;
+    private boolean firstCheck = false;
     List<DummyLocationService.FriendLocation> matched;
 
     @Override
@@ -101,100 +103,97 @@ public class InviteFriendActivity extends Activity {
                     {
                         for(Friend f: invitedFriends)
                         {
+                            Log.i(LOG_TAG, f.getName() + friend.getName());
                             if(f.getName().equals(friend.getName()))
                             {
+                                Log.i(LOG_TAG, "false");
                                 addCheck = false;
                                 Toast toast = Toast.makeText(getApplicationContext(), getResources().getString(R.string.duplicateFriend), Toast.LENGTH_SHORT);
                                 toast.show();
-                            }
-                            else
-                            {
-                                addCheck = true;
                             }
                         }
                     }
                     else
                     {
                         invitedFriends.add(friend);
-                        String[] location = findMidPoint().split(", ");
-                        lat = location[0];
-                        lon = location[1];
+                        firstCheck = true;
+                        if(invitedFriends.size() == 1)
+                        {
+                            findMidPoint();
+                        }
+                        else
+                        {
+                            if(className.equals(getResources().getString(R.string.addMeeting)))
+                            {
+                                goToAddMeeting();
+                            }
+                            else
+                            {
+                                goToEditMeeting();
+                            }
+                        }
                     }
 
-                    if(addCheck)
+                    if(addCheck && !firstCheck)
                     {
                         invitedFriends.add(friend);
-                        String[] location = findMidPoint().split(", ");
-                        lat = location[0];
-                        lon = location[1];
-                    }
-                    if(className.equals(getResources().getString(R.string.addMeeting)))
-                    {
-                        goToAddMeeting();
+                        if(invitedFriends.size() == 1)
+                        {
+                            findMidPoint();
+                        }
+                        else
+                        {
+                            if(className.equals(getResources().getString(R.string.addMeeting)))
+                            {
+                                goToAddMeeting();
+                            }
+                            else
+                            {
+                                goToEditMeeting();
+                            }
+                        }
                     }
                     else
                     {
-                        goToEditMeeting();
+                        if(className.equals(getResources().getString(R.string.addMeeting)))
+                        {
+                            goToAddMeeting();
+                        }
+                        else
+                        {
+                            goToEditMeeting();
+                        }
                     }
                 }
             });
         }
     }
 
-    public String findMidPoint()
+    public Friend getFriend()
     {
-        int count = 0;
-        long shortestTime = 0;
-        Double latMid = -30.35;
-        Double lonMid = 50.13;
-        DummyLocationService dummyLocationService = DummyLocationService.getSingletonInstance(this);
+        return friend;
+    }
 
-        Friend firstFriend = invitedFriends.get(0);
-        dummyLocationService.logAll();
-            matched = dummyLocationService
-                    .getFriendLocationsForTime(currentDate, 2, 0);
-        if(matched.size() == 0)
-        {
-            Toast toast = Toast.makeText(this.getApplicationContext(), this.getResources().getString(R.string.invalidLocation), Toast.LENGTH_LONG);
-            toast.show();
-            return "0, 0";
-        }
-        for(DummyLocationService.FriendLocation f: matched)
-        {
-            if(f.name.equals(firstFriend.getName()))
-            {
-                Date date = f.time;
-                long timeDiff = date.getTime() - currentDate.getTime();
-                if(count == 0)
-                {
-                    shortestTime = timeDiff;
-                    lat = String.valueOf(f.latitude);
-                    lon = String.valueOf(f.longitude);
-                }
-                else
-                {
-                    if(timeDiff < shortestTime)
-                    {
-                        shortestTime = timeDiff;
-                        lat = String.valueOf(f.latitude);
-                        lon = String.valueOf(f.longitude);
-                    }
-                }
-                count++;
-                Log.i(LOG_TAG, f.toString());
-            }
-            else
-            {
-                Toast toast = Toast.makeText(this.getApplicationContext(), this.getResources().getString(R.string.invalidLocation), Toast.LENGTH_LONG);
-                toast.show();
-                return "0, 0";
-            }
-        }
-        latMid = (latMid + Double.parseDouble(lat))/2;
-        lonMid = (lonMid + Double.parseDouble(lon))/2;
+    public String getClassName()
+    {
+        return className;
+    }
 
-        String finalMid = String.valueOf(latMid) + ", " + String.valueOf(lonMid);
-        return finalMid;
+    public void findMidPoint()
+    {
+        InviteFriendAsync async = new InviteFriendAsync(this, friendManager, meetingManager);
+        async.execute(friend);
+    }
+
+    public void setLocation(String lat, String lon)
+    {
+        this.lat = lat;
+        this.lon = lon;
+    }
+
+    public Date getCurrentDate()
+    {
+        return currentDate;
     }
 
     public void goToAddMeeting()

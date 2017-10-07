@@ -78,9 +78,13 @@ public class AddMeetingActivity extends AppCompatActivity {
         }
 
         initialiseValues();
-        DBHandler db = new DBHandler(this);
 
-        meetingController = new MeetingController(this, null, friendManager, meetingManager, db);
+        for(Friend f: invitedFriends)
+        {
+            Log.i(LOG_TAG, f.getName());
+        }
+
+        meetingController = new MeetingController(this, null, friendManager, meetingManager);
 
         btEndDate.setOnClickListener(meetingController);
         Button btInvite = (Button) findViewById(R.id.btMeetingInvite);
@@ -102,7 +106,6 @@ public class AddMeetingActivity extends AppCompatActivity {
 
     public void setCurrentTime()
     {
-        //tvStartTime.setText(String.format("%02d:%02d", hour, minute));
         tvStartTime.setText(currentDate.toString());
     }
 
