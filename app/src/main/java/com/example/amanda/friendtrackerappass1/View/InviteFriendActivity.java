@@ -3,6 +3,7 @@ package com.example.amanda.friendtrackerappass1.View;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,7 +22,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InviteFriendActivity extends Activity {
+public class InviteFriendActivity extends AppCompatActivity{
 
     private FriendListAdapter adapter;
 

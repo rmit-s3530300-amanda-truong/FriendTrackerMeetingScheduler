@@ -3,13 +3,18 @@ package com.example.amanda.friendtrackerappass1.View;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
-import android.os.Parcelable;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,19 +26,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.amanda.friendtrackerappass1.AsyncTask.RetrieveListsAsync;
 import com.example.amanda.friendtrackerappass1.Controller.MainMenuController;
-import com.example.amanda.friendtrackerappass1.Model.DBHandler;
-import com.example.amanda.friendtrackerappass1.Model.Friend;
+import com.example.amanda.friendtrackerappass1.Controller.SuggestMeetingController;
+import com.example.amanda.friendtrackerappass1.Model.ContactDataManager;
 import com.example.amanda.friendtrackerappass1.Model.FriendManager;
 import com.example.amanda.friendtrackerappass1.Model.LocationHandler;
-import com.example.amanda.friendtrackerappass1.Model.Meeting;
 import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
-
-import java.io.Serializable;
-import java.util.ArrayList;
+import com.example.amanda.friendtrackerappass1.Service.MeetingNotificationService;
+import com.example.amanda.friendtrackerappass1.Service.SuggestionService;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -41,6 +45,13 @@ public class MainActivity extends AppCompatActivity{
     private MainMenuController controller;
     private FriendManager friendManager;
     private MeetingManager meetingManager;
+    private LocationManager locationManager;
+    private LocationHandler locationHandler;
+    private JobScheduler jobScheduler;
+    private int upcomingInt;
+    private int suggestInt;
+    private int remindMeInt;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +63,7 @@ public class MainActivity extends AppCompatActivity{
         Button bAddContact = (Button) findViewById(R.id.bAddContact);
         Button bDisContact = (Button) findViewById(R.id.btDisplayContact);
         Button bDisMeeting = (Button) findViewById(R.id.btDisplayMeeting);
+        Button bSuggest = (Button) findViewById(R.id.btSuggest);
         TextView tvContact = (TextView) findViewById(R.id.tvContact);
         TextView tvInstruct = (TextView) findViewById(R.id.tvInstruct);
 
@@ -77,15 +89,42 @@ public class MainActivity extends AppCompatActivity{
             meetingManager = new MeetingManager();
         }
 
-        getLocation();
+        getLocationPermission();
         getContactPermission();
 
         RetrieveListsAsync asyncTask = new RetrieveListsAsync(this, friendManager, meetingManager);
         asyncTask.execute();
 
         bAddContact.setOnClickListener(controller);
+        bSuggest.setOnClickListener(new SuggestController());
         bDisContact.setOnClickListener(new DisContactMainController());
         bDisMeeting.setOnClickListener(new DisMeetingMainController());
+
+        SharedPreferences pref = getSharedPreferences(getResources().getString(R.string.settings), MODE_PRIVATE);
+        if(pref != null)
+        {
+            int upcoming = pref.getInt(getResources().getString(R.string.upcomingMeetings), 0);
+            int suggest = pref.getInt(getResources().getString(R.string.suggestNow), 0);
+            int remind = pref.getInt(getResources().getString(R.string.remind), 0);
+            if(upcoming != 0)
+            {
+                upcomingInt = upcoming;
+//                Intent intent = new Intent(this, MeetingNotificationService.class);
+//                intent.putExtra(getResources().getString(R.string.upcomingMeetings), upcomingInt);
+//                intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+//                intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+//                startService(intent);
+            }
+            if(suggest != 0)
+            {
+                suggestInt = suggest;
+                scheduleJob();
+            }
+            if(remind != 0)
+            {
+                remindMeInt = remind;
+            }
+        }
     }
 
     @Override
@@ -109,10 +148,32 @@ public class MainActivity extends AppCompatActivity{
         return true;
     }
 
-    public void getLocation()
+    public void scheduleJob()
     {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        LocationHandler locationHandler = new LocationHandler();
+        Log.i(LOG_TAG, "schedule Job");
+        jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        ComponentName jobService = new ComponentName(this, SuggestionService.class);
+        JobInfo jobInfo = new JobInfo.Builder(0, jobService)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPeriodic(suggestInt*1000).build();
+        int jobId = jobScheduler.schedule(jobInfo);
+        if(jobScheduler.schedule(jobInfo)>0){
+            Toast.makeText(MainActivity.this,
+                    "Successfully scheduled job: " + jobId,
+                    Toast.LENGTH_SHORT).show();
+        }
+        else
+            {
+            Toast.makeText(MainActivity.this,
+                    "RESULT_FAILURE: " + jobId,
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void getLocationPermission()
+    {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationHandler = new LocationHandler();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             {
@@ -122,6 +183,10 @@ public class MainActivity extends AppCompatActivity{
             return;
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationHandler);
+        Location myLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Double lat = myLocation.getLatitude();
+        Double lon = myLocation.getLongitude();
+        location = lat + ":" + lon;
     }
 
     public void getContactPermission()
@@ -167,7 +232,7 @@ public class MainActivity extends AppCompatActivity{
          }
          else if(requestCode == getResources().getInteger(R.integer.REQUEST_LOCATION_PERMISSION))
          {
-             getLocation();
+             getLocationPermission();
          }
     }
 
@@ -257,6 +322,37 @@ public class MainActivity extends AppCompatActivity{
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
             startActivity(intent);
+        }
+    }
+
+    private class SuggestController implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            boolean check = checkEmptyContacts();
+            if(check)
+            {
+                Intent intent = new Intent(MainActivity.this, SuggestMeetingActivity.class);
+                intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
+                intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+                intent.putExtra(getResources().getString(R.string.location), location);
+                startActivity(intent);
+            }
+            else
+            {
+                Toast.makeText(MainActivity.this, getResources().getString(R.string.noContacts), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public boolean checkEmptyContacts()
+    {
+        if(friendManager.getFriendList().size() ==0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 }

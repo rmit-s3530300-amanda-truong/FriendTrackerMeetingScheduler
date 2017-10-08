@@ -79,10 +79,28 @@
     <string name="invalidLocation">No Friends were found in at this time, please select another
         friend or try again later</string>
     <string name="database">Database</string>
+    <string name="suggest">Suggest Meeting Now</string>
     <string name="suggestNow">Suggest Meeting Interval:</string>
     <string name="minute">minutes</string>
     <string name="minutesb4">minutes before meeting</string>
     <string name="upcomingMeetings">Notifications for upcoming meetings displayed:</string>
     <string name="remindMe">Remind me in:</string>
-
+    <string name="viewLocation">View Location on Maps</string>
+    <string name="startService">Start Get Location Service</string>
+    <string name="stopService">Stop Get Location Service</string>
+    <string name="myLocation">My Location: </string>
+    <string name="locationInstruct">Press Start Get Location Service to get location</string>
+    <string name="noContacts">Please import a contact first!</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Decline</string>
+    <string name="cancel">Cancel</string>
+    <string name="meetingSuggest">Suggested Meeting</string>
+    <string name="closest">Closest Friend:</string>
+    <string name="atLoc">Location:</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="remind">Upcoming meetings remind me in: </string>
+    <string name="afterDismiss">minutes after notification dismissed</string>
+    <string name="notif">Meeting Reminder</string>
+    <string name="notifText">You have a meeting soon</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.amanda.friendtrackerappass1.View.SuggestMeetingActivity">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical"
+        android:weightSum="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1">
+
+        <TextView
+            android:id="@+id/tvMeetingSuggest"
+            android:layout_width="224dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="50dp"
+            android:layout_marginTop="44dp"
+            android:text="@string/meetingSuggest"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/tvClosest"
+            android:layout_width="388dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginStart="1dp"
+            android:layout_weight="0.03"
+            android:text="@string/closest" />
+
+        <TextView
+            android:id="@+id/tvFriendName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05" />
+
+        <TextView
+            android:id="@+id/tvatLoc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05"
+            android:text="@string/location" />
+
+        <TextView
+            android:id="@+id/tvLocationCoor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="7dp"
+            android:layout_marginTop="14dp" />
+
+        <Button
+            android:id="@+id/btShowLocation"
+            android:layout_width="284dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50sp"
+            android:layout_weight="0.08"
+            android:text="@string/viewLocation" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100sp"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+
+            <Button
+                android:id="@+id/btDecline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="31dp"
+                android:layout_marginEnd="75dp"
+                android:layout_marginStart="73dp"
+                android:layout_weight="0.22"
+                android:text="@string/decline" />
+
+            <Button
+                android:id="@+id/btAccept"
+                android:layout_width="109dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="31dp"
+                android:layout_marginEnd="87dp"
+                android:text="@string/accept" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btCancel"
+            android:layout_width="168dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="30dp"
+            android:text="@string/cancel" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

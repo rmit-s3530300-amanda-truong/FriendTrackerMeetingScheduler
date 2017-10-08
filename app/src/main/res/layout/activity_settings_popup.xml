@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/suggestNow"
-        android:textColor="@android:color/background_dark"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,8 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/minute"
-            android:textColor="@android:color/background_dark"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -46,15 +44,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
-        android:layout_weight="0.63"
         android:text="@string/upcomingMeetings"
-        android:textColor="@android:color/background_dark"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.18"
+        android:layout_weight="0.02"
         android:orientation="horizontal">
 
         <EditText
@@ -71,8 +67,36 @@
             android:layout_width="match_parent"
             android:layout_height="68dp"
             android:text="@string/minutesb4"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/remind"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="391dp"
+        android:layout_height="94dp"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etRemindMe"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
             android:textColor="@android:color/background_dark"
-            android:textSize="25sp" />
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/tvInterval3"
+            android:layout_width="285dp"
+            android:layout_height="68dp"
+            android:text="@string/afterDismiss"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <Button

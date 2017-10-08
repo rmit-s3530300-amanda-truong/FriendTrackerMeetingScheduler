@@ -43,6 +43,8 @@ public class AddMeetingActivity extends AppCompatActivity {
     private String endTime;
     private String lat;
     private String lon;
+    private String currentInfo;
+    private String className;
     private Date currentDate;
 
     @Override
@@ -62,6 +64,8 @@ public class AddMeetingActivity extends AppCompatActivity {
         etLatitude = (EditText) findViewById(R.id.etLatitude);
         etLongitude = (EditText) findViewById(R.id.etLongitude);
 
+        currentDate = Calendar.getInstance().getTime();
+
         Bundle contactInfo = getIntent().getExtras();
         if(contactInfo != null)
         {
@@ -75,9 +79,31 @@ public class AddMeetingActivity extends AppCompatActivity {
             endDate = (String) contactInfo.getString(getResources().getString(R.string.endDate));
             lat = (String) contactInfo.getString(getResources().getString(R.string.latitude));
             lon = (String) contactInfo.getString(getResources().getString(R.string.longitude));
+            className = (String) contactInfo.getString(getResources().getString(R.string.className));
+            if(className != null)
+            {
+                if(className.equals(getResources().getString(R.string.suggest)))
+                {
+                    currentInfo = (String) contactInfo.getString(getResources().getString(R.string.suggestNow));
+                    currentDate = (Date) contactInfo.get(getResources().getString(R.string.current));
+                }
+            }
         }
 
         initialiseValues();
+
+        if(currentInfo != null)
+        {
+            String[] split = currentInfo.split(":");
+            Friend friend = friendManager.getFriend(split[0]);
+            invitedFriends.add(friend);
+            setInvitedFriends();
+            String[] location = split[2].split(", ");
+            lat = location[0];
+            lon = location[1];
+            setLatitude(lat);
+            setLongitude(lon);
+        }
 
         for(Friend f: invitedFriends)
         {
@@ -95,7 +121,6 @@ public class AddMeetingActivity extends AppCompatActivity {
         btRemove.setOnClickListener(meetingController);
         btAdd.setOnClickListener(meetingController);
 
-        currentDate = Calendar.getInstance().getTime();
         setCurrentTime();
     }
 

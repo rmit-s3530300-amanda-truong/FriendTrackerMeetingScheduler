@@ -11,14 +11,15 @@ import android.util.Log;
 
 public class LocationHandler implements LocationListener{
     private String LOG_TAG = this.getClass().getName();
+    private String myLocation;
 
     @Override
     public void onLocationChanged(Location location) {
         Double lat = location.getLatitude();
         Double lon = location.getLongitude();
 
-        String myLoc = lat + ", " + lon;
-        Log.i(LOG_TAG, myLoc + " my location ");
+        myLocation = lat + ":" + lon;
+        Log.i(LOG_TAG, myLocation + " my location ");
     }
 
     @Override

@@ -21,7 +21,6 @@ public class Friend implements Serializable{
     private ArrayList<String> locationInfo = new ArrayList<>();
     private Date birthday;
     private String LOG_TAG = this.getClass().getName();
-
     public Friend(String id, String name, String email, Date birthday)
     {
         this.id = id;
