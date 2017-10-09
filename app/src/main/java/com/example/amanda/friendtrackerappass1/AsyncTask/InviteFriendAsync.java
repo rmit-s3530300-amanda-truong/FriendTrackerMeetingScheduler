@@ -18,6 +18,7 @@ import com.example.amanda.friendtrackerappass1.Model.MeetingManager;
 import com.example.amanda.friendtrackerappass1.R;
 import com.example.amanda.friendtrackerappass1.View.InviteFriendActivity;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +36,9 @@ public class InviteFriendAsync extends AsyncTask<Friend, Void, Void> {
     private String lat;
     private String lon;
     private String finalMid;
+    private Double latMid;
+    private Double lonMid;
+    private List<DummyLocationService.FriendLocation> matchListSorted;
 
     public InviteFriendAsync(Activity activity, FriendManager friendManager, MeetingManager meetingManager) {
         super();
@@ -48,62 +52,71 @@ public class InviteFriendAsync extends AsyncTask<Friend, Void, Void> {
         boolean end = false;
         int count = 0;
         long shortestTime = 0;
-        Double latMid = -30.35;
-        Double lonMid = 50.13;
+        String location = activity.getLocation();
+        String[] locationSplit = location.split(":");
+        latMid = Double.parseDouble(locationSplit[0]);
+        lonMid = Double.parseDouble(locationSplit[1]);
         DummyLocationService dummyLocationService = DummyLocationService.getSingletonInstance(activity);
 
         dummyLocationService.logAll();
-        matched = dummyLocationService
-                .getFriendLocationsForTime(activity.getCurrentDate(), 2, 0);
+        matched = dummyLocationService.getFriendLocationsForTime(activity.getCurrentDate(), 2, 0);
         if(matched.size() == 0)
         {
             publishProgress();
             finalMid = "0, 0";
             end = true;
         }
-        for(DummyLocationService.FriendLocation f: matched)
+
+        matchListSorted = new ArrayList<>();
+        if(matched.size()>0)
         {
+            matchListSorted.add(matched.get(0));
+        }
+
+        Boolean found = false;
+
+        for(DummyLocationService.FriendLocation f : matched)
+        {
+            found = false;
+            for(int x =0; x<matchListSorted.size(); x++)
+            {
+                if (f.name.equals(matchListSorted.get(x).name))
+                {
+                    long friendDifference = f.time.getTime() - activity.getCurrentDate().getTime();
+                    long friendSortedDifference = matchListSorted.get(x).time.getTime() - activity.getCurrentDate().getTime();
+                    found = true;
+                    if (friendDifference < friendSortedDifference)
+                    {
+                        matchListSorted.remove(x);
+                        matchListSorted.add(x, f);
+                    }
+                }
+            }
+            if(found == false)
+            {
+                matchListSorted.add(f);
+            }
+        }
+        for(DummyLocationService.FriendLocation f: matchListSorted)
+        {
+            Log.i(LOG_TAG, f.toString() + "match list sorted");
             if(f.name.equals(friend[0].getName()))
             {
                 Date date = f.time;
                 long timeDiff = date.getTime() - activity.getCurrentDate().getTime();
-                if(count == 0)
-                {
-                    shortestTime = timeDiff;
-                    lat = String.valueOf(f.latitude);
-                    lon = String.valueOf(f.longitude);
-                }
-                else
-                {
-                    if(timeDiff < shortestTime)
-                    {
-                        shortestTime = timeDiff;
-                        lat = String.valueOf(f.latitude);
-                        lon = String.valueOf(f.longitude);
-                    }
-                }
-                count++;
+                lat = String.valueOf(f.latitude);
+                lon = String.valueOf(f.longitude);
                 Log.i(LOG_TAG, f.toString());
-            }
-            else
-            {
-                publishProgress();
-                finalMid = "0, 0";
-                end = true;
+                Log.i(LOG_TAG, lat + lon + "location");
+                latMid = (latMid + Double.parseDouble(lat))/2;
+                lonMid = (lonMid + Double.parseDouble(lon))/2;
+                finalMid = String.valueOf(latMid) + ", " + String.valueOf(lonMid);
+                Log.i(LOG_TAG, finalMid + "finalMid");
             }
         }
-        if(end == false)
-        {
-            Log.i(LOG_TAG, lat + lon + "location");
-            latMid = (latMid + Double.parseDouble(lat))/2;
-            lonMid = (lonMid + Double.parseDouble(lon))/2;
-            finalMid = String.valueOf(latMid) + ", " + String.valueOf(lonMid);
-            Log.i(LOG_TAG, finalMid + "finalMid");
-        }
-
-        String[] location = finalMid.split(", ");
-        lat = location[0];
-        lon = location[1];
+        String[] locationFinal = finalMid.split(", ");
+        lat = locationFinal[0];
+        lon = locationFinal[1];
         activity.setLocation(lat, lon);
 
         return null;
@@ -112,7 +125,7 @@ public class InviteFriendAsync extends AsyncTask<Friend, Void, Void> {
     @Override
     protected void onProgressUpdate(Void...voids)
     {
-        Toast toast = Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.invalidLocation), Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.invalidLocation), Toast.LENGTH_SHORT);
         toast.show();
     }
 

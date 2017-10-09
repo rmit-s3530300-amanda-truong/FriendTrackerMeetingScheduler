@@ -43,6 +43,7 @@ public class AddMeetingActivity extends AppCompatActivity {
     private String endTime;
     private String lat;
     private String lon;
+    private String location;
     private String currentInfo;
     private String className;
     private Date currentDate;
@@ -79,6 +80,7 @@ public class AddMeetingActivity extends AppCompatActivity {
             endDate = (String) contactInfo.getString(getResources().getString(R.string.endDate));
             lat = (String) contactInfo.getString(getResources().getString(R.string.latitude));
             lon = (String) contactInfo.getString(getResources().getString(R.string.longitude));
+            location = (String) contactInfo.getString(getResources().getString(R.string.location));
             className = (String) contactInfo.getString(getResources().getString(R.string.className));
             if(className != null)
             {
@@ -208,6 +210,7 @@ public class AddMeetingActivity extends AppCompatActivity {
         intent.putExtra(getResources().getString(R.string.longitude), etLongitude.getText().toString());
         intent.putExtra(getResources().getString(R.string.className),getResources().getString(R.string.addMeeting));
         intent.putExtra(getResources().getString(R.string.current), currentDate);
+        intent.putExtra(getResources().getString(R.string.location), location);
         startActivity(intent);
     }
 
@@ -225,6 +228,7 @@ public class AddMeetingActivity extends AppCompatActivity {
         intent.putExtra(getResources().getString(R.string.longitude), etLongitude.getText().toString());
         intent.putExtra(getResources().getString(R.string.className),getResources().getString(R.string.removeInvited));
         intent.putExtra(getResources().getString(R.string.extra),getResources().getString(R.string.add));
+        intent.putExtra(getResources().getString(R.string.location), location);
         startActivity(intent);
     }
 
@@ -233,6 +237,7 @@ public class AddMeetingActivity extends AppCompatActivity {
         Intent intent = new Intent(this, DisplayMeetingActivity.class);
         intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
         intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+        intent.putExtra(getResources().getString(R.string.location), location);
         startActivity(intent);
     }
 

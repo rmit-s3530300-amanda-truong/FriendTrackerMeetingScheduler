@@ -187,6 +187,7 @@ public class EditMeetingActivity extends AppCompatActivity {
         intent.putExtra(getResources().getString(R.string.latitude), etLatitude.getText().toString());
         intent.putExtra(getResources().getString(R.string.longitude), etLongitude.getText().toString());
         intent.putExtra(getResources().getString(R.string.className),getResources().getString(R.string.edit));
+        intent.putExtra(getResources().getString(R.string.location), location);
         startActivity(intent);
     }
 
@@ -205,6 +206,7 @@ public class EditMeetingActivity extends AppCompatActivity {
         intent.putExtra(getResources().getString(R.string.longitude), etLongitude.getText().toString());
         intent.putExtra(getResources().getString(R.string.className),getResources().getString(R.string.removeInvited));
         intent.putExtra(getResources().getString(R.string.extra), getResources().getString(R.string.edit));
+        intent.putExtra(getResources().getString(R.string.location), location);
         startActivity(intent);
     }
 

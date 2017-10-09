@@ -54,4 +54,12 @@ public class RetrieveListsAsync extends AsyncTask<Void, Void, Void> {
         }
         return null;
     }
+
+    @Override
+    protected void onPostExecute(Void voids)
+    {
+        activity.setFriendManager(friendManager);
+        activity.setMeetingManager(meetingManager);
+        Log.i(LOG_TAG, friendManager.getFriendList().size()+ "friendManager");
+    }
 }

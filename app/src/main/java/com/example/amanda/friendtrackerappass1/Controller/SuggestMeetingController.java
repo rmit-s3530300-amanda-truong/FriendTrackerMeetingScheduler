@@ -50,6 +50,7 @@ public class SuggestMeetingController implements View.OnClickListener{
             intent.putExtra(activity.getResources().getString(R.string.suggestNow), activity.getCurrentInfo());
             intent.putExtra(activity.getResources().getString(R.string.current), activity.getCurrentDate());
             intent.putExtra(activity.getResources().getString(R.string.className), activity.getResources().getString(R.string.suggest));
+            intent.putExtra(activity.getResources().getString(R.string.location), location);
             activity.startActivity(intent);
         }
         else if(buttonClicked == R.id.btDecline)
@@ -61,6 +62,7 @@ public class SuggestMeetingController implements View.OnClickListener{
             Intent intent = new Intent(activity, MainActivity.class);
             intent.putExtra(activity.getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(activity.getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(activity.getResources().getString(R.string.location), location);
             activity.startActivity(intent);
         }
     }

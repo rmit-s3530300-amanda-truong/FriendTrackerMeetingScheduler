@@ -30,6 +30,7 @@ public class DisplayMeetingActivity extends AppCompatActivity {
     private MeetingController meetingController;
     private String[] menuItems;
     private String LOG_TAG = this.getClass().getName();
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class DisplayMeetingActivity extends AppCompatActivity {
         {
             friendManager = (FriendManager) contactInfo.getSerializable(getResources().getString(R.string.friendManager));
             meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
+            location = (String) contactInfo.getString(getResources().getString(R.string.location));
         }
         meetingController = new MeetingController(null, this, friendManager, meetingManager);
         meetingList = meetingManager.getList();
@@ -85,6 +87,7 @@ public class DisplayMeetingActivity extends AppCompatActivity {
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
             intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.displaymeetingList));
+            intent.putExtra(getResources().getString(R.string.location), location);
             startActivity(intent);
         }
         else if(menuItemName.equals(menuItems[1]))
@@ -112,6 +115,7 @@ public class DisplayMeetingActivity extends AppCompatActivity {
             intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.meetingList));
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(getResources().getString(R.string.location), location);
             startActivity(intent);
         }
         else if(item.getItemId() == R.id.action_home)
@@ -119,6 +123,7 @@ public class DisplayMeetingActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(getResources().getString(R.string.location), location);
             startActivity(intent);
         }
         else if(item.getItemId() == R.id.action_addMeeting)
@@ -126,6 +131,7 @@ public class DisplayMeetingActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddMeetingActivity.class);
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(getResources().getString(R.string.location), location);
             startActivity(intent);
         }
         return true;

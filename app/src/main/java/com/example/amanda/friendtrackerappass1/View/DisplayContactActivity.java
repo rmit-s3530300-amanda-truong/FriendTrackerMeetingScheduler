@@ -35,6 +35,7 @@ public class DisplayContactActivity extends AppCompatActivity {
     private FriendListController friendListController;
     private FriendManager friendManager;
     private MeetingManager meetingManager;
+    private String location;
     String[] menuItems;
 
     @Override
@@ -55,6 +56,7 @@ public class DisplayContactActivity extends AppCompatActivity {
             friendManager = (FriendManager) contactInfo.getSerializable(getResources().getString(R.string.friendManager));
             meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
             callingClass = contactInfo.getString(getResources().getString(R.string.className));
+            location = (String) contactInfo.getString(getResources().getString(R.string.location));
         }
 
         friendListController = new FriendListController(this, friendManager);
@@ -100,6 +102,7 @@ public class DisplayContactActivity extends AppCompatActivity {
             intent.putExtra(getResources().getString(R.string.id), adapter.getItem(listPos).getID());
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(getResources().getString(R.string.location), location);
             startActivity(intent);
         }
         else if(menuItemName.equals(menuItems[1]))
@@ -127,6 +130,7 @@ public class DisplayContactActivity extends AppCompatActivity {
             intent.putExtra(getResources().getString(R.string.addContact),getResources().getString(R.string.add_button));
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(getResources().getString(R.string.location), location);
             startActivity(intent);
         }
         else if(item.getItemId() == R.id.action_home)
@@ -134,6 +138,7 @@ public class DisplayContactActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(getResources().getString(R.string.location), location);
             startActivity(intent);
         }
         else if(item.getItemId() == R.id.action_addMeeting)
@@ -141,6 +146,7 @@ public class DisplayContactActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AddMeetingActivity.class);
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(getResources().getString(R.string.location), location);
             startActivity(intent);
         }
         else if(item.getItemId() == R.id.action_displayMeeting)
@@ -148,6 +154,7 @@ public class DisplayContactActivity extends AppCompatActivity {
             Intent intent = new Intent(this, DisplayMeetingActivity.class);
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(getResources().getString(R.string.location), location);
             startActivity(intent);
         }
         return true;

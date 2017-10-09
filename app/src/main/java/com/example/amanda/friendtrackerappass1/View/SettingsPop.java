@@ -29,6 +29,7 @@ public class SettingsPop extends AppCompatActivity{
     private int remindMeInt;
     private FriendManager friendManager;
     private MeetingManager meetingManager;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,6 +47,7 @@ public class SettingsPop extends AppCompatActivity{
         {
             friendManager = (FriendManager) buttonInfo.getSerializable(getResources().getString(R.string.friendManager));
             meetingManager = (MeetingManager) buttonInfo.getSerializable(getResources().getString(R.string.meetingManager));
+            location = (String) buttonInfo.getString(getResources().getString(R.string.location));
         }
 
         SharedPreferences pref = getSharedPreferences(getResources().getString(R.string.settings), MODE_PRIVATE);
@@ -99,6 +101,7 @@ public class SettingsPop extends AppCompatActivity{
             intent.putExtra(getResources().getString(R.string.remind), remindMeInt);
             intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
             intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
+            intent.putExtra(getResources().getString(R.string.location), location);
             startActivity(intent);
         }
     }

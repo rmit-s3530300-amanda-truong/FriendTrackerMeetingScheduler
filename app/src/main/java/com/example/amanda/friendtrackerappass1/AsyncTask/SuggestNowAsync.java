@@ -51,6 +51,7 @@ public class SuggestNowAsync extends AsyncTask<String, Void, Void> {
     private HttpURLConnection connection;
     private ArrayList<String> infoList;
     private ArrayList<Friend> friendList;
+    private List<DummyLocationService.FriendLocation> matchListSorted;
     private long furthest;
 
     public SuggestNowAsync(Activity activity, FriendManager friendManager, MeetingManager meetingManager) {
@@ -88,34 +89,46 @@ public class SuggestNowAsync extends AsyncTask<String, Void, Void> {
             finalMid = "0, 0";
             end = true;
         }
+
+        matchListSorted = new ArrayList<>();
+        if(matched.size()>0)
+        {
+            matchListSorted.add(matched.get(0));
+        }
+
+        Boolean found = false;
+
+        for(DummyLocationService.FriendLocation friend : matched)
+        {
+            found = false;
+            for(int x =0; x<matchListSorted.size(); x++)
+            {
+                if (friend.name.equals(matchListSorted.get(x).name))
+                {
+                    long friendDifference = friend.time.getTime() - currentDate.getTime();
+                    long friendSortedDifference = matchListSorted.get(x).time.getTime() - currentDate.getTime();
+                    found = true;
+                    if (friendDifference < friendSortedDifference)
+                    {
+                        matchListSorted.remove(x);
+                        matchListSorted.add(x, friend);
+                    }
+                }
+            }
+            if(found == false)
+            {
+                matchListSorted.add(friend);
+            }
+        }
+
         for(Friend friend: friendList)
         {
-            for(DummyLocationService.FriendLocation f: matched)
+            for(DummyLocationService.FriendLocation f: matchListSorted)
             {
-                int count = 0;
-                long shortestTime = 0;
-                Log.i(LOG_TAG, f.name + friend.getName());
                 if(f.name.equals(friend.getName()))
                 {
-                    Date date = f.time;
-                    long timeDiff = date.getTime() - currentDate.getTime();
-                    if(count == 0)
-                    {
-                        lat = String.valueOf(f.latitude);
-                        lon = String.valueOf(f.longitude);
-                        Log.i(LOG_TAG, lat + ":" + lon + f.name + "before");
-                    }
-                    else
-                    {
-                        if(timeDiff < shortestTime)
-                        {
-                            lat = String.valueOf(f.latitude);
-                            lon = String.valueOf(f.longitude);
-                            Log.i(LOG_TAG, lat + ":" + lon + f.name + "before");
-                        }
-                    }
-                    count++;
-                    Log.i(LOG_TAG, f.toString());
+                    lat = String.valueOf(f.latitude);
+                    lon = String.valueOf(f.longitude);
 
                     String myDistance = getDistance(latMid, lonMid, myLat, myLon);
                     Log.i(LOG_TAG, lat + ":" + lon + f.name + "after");

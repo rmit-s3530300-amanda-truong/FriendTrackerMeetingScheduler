@@ -34,6 +34,7 @@ public class EditContactActivity extends AppCompatActivity {
     private Friend friend;
     private String LOG_TAG = this.getClass().getName();
     private MeetingManager meetingManager;
+    private String location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class EditContactActivity extends AppCompatActivity {
             id = contactInfo.getString(getResources().getString(R.string.id));
             friendManager = (FriendManager) contactInfo.getSerializable(getResources().getString(R.string.friendManager));
             meetingManager = (MeetingManager) contactInfo.getSerializable(getResources().getString(R.string.meetingManager));
+            location = (String) contactInfo.getString(getResources().getString(R.string.location));
         }
 
         friend = friendManager.getFriend(id);
@@ -139,6 +141,7 @@ public class EditContactActivity extends AppCompatActivity {
                 intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
                 intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
                 intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.edit));
+                intent.putExtra(getResources().getString(R.string.location), location);
                 startActivity(intent);
             }
             else
@@ -161,6 +164,7 @@ public class EditContactActivity extends AppCompatActivity {
                 intent.putExtra(getResources().getString(R.string.friendManager), friendManager);
                 intent.putExtra(getResources().getString(R.string.meetingManager), meetingManager);
                 intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.edit));
+                intent.putExtra(getResources().getString(R.string.location), location);
                 startActivity(intent);
             }
         }

@@ -65,6 +65,7 @@
     <string name="oct">Oct</string>
     <string name="nov">Nov</string>
     <string name="dec">Dec</string>
+    <string name="second">seconds</string>
     <string name="removeInvited">Remove Friends</string>
     <string name="duplicateFriend">Invalid: Friend chosen is already invited</string>
     <string name="invTitle">Title Invite</string>
@@ -103,4 +104,7 @@
     <string name="notif">Meeting Reminder</string>
     <string name="notifText">You have a meeting soon</string>
     <string name="dismiss">Dismiss</string>
+    <string name="networkInfo">networkInfo</string>
+    <string name="networkTrue">Network Connected</string>
+    <string name="networkFalse">Network Disconnected</string>
 </resources>

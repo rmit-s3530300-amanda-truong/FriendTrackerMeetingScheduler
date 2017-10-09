@@ -41,6 +41,7 @@ public class InviteFriendActivity extends AppCompatActivity{
     private String lat;
     private String lon;
     private String className;
+    private String location;
     private String extra;
     private boolean addCheck = true;
     private Date currentDate;
@@ -68,6 +69,7 @@ public class InviteFriendActivity extends AppCompatActivity{
             className = (String) contactInfo.getString(getResources().getString(R.string.className));
             extra = (String) contactInfo.getString(getResources().getString(R.string.extra));
             currentDate = (Date) contactInfo.get(getResources().getString(R.string.current));
+            location = (String) contactInfo.getString(getResources().getString(R.string.location));
         }
         if(className.equals(getResources().getString(R.string.removeInvited)))
         {
@@ -192,6 +194,11 @@ public class InviteFriendActivity extends AppCompatActivity{
         this.lon = lon;
     }
 
+    public String getLocation()
+    {
+        return location;
+    }
+
     public Date getCurrentDate()
     {
         return currentDate;
@@ -209,6 +216,7 @@ public class InviteFriendActivity extends AppCompatActivity{
         intent.putExtra(getResources().getString(R.string.endTime), endTime);
         intent.putExtra(getResources().getString(R.string.latitude), lat);
         intent.putExtra(getResources().getString(R.string.longitude), lon);
+        intent.putExtra(getResources().getString(R.string.location), location);
         startActivity(intent);
     }
 
@@ -226,6 +234,7 @@ public class InviteFriendActivity extends AppCompatActivity{
         intent.putExtra(getResources().getString(R.string.invLat), lat);
         intent.putExtra(getResources().getString(R.string.invLon), lon);
         intent.putExtra(getResources().getString(R.string.className), getResources().getString(R.string.invite));
+        intent.putExtra(getResources().getString(R.string.location), location);
         startActivity(intent);
     }
 }
